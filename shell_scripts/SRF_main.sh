@@ -20,8 +20,11 @@ lang=FI
 
 rsync -a --progress $HOME/ThesisII "$TMPDIR"/ --exclude data
 cd "$TMPDIR"/ThesisII
+
+echo
+
 mkdir data
-cp -r $HOME/ThesisII/data/"$lang" "$TMPDIR"/ThesisII/data/
+cp -r $HOME/ThesisII/data/"$lang"_pkl "$TMPDIR"/ThesisII/data/
 cp -r $HOME/ThesisII/data/reader.py "$TMPDIR"/ThesisII/data/
 cp -r $HOME/ThesisII/data/corpus.py "$TMPDIR"/ThesisII/data/
 
