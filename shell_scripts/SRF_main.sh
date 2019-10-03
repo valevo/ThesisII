@@ -18,7 +18,7 @@ lang=FI
 #cp -r $HOME/ThesisII/stats "$TMPDIR"/ThesisII
 
 
-rsync -v --progress $HOME/ThesisII "$TMPDIR"/ --exclude data
+rsync -va --progress $HOME/ThesisII "$TMPDIR"/ --exclude data
 cd "$TMPDIR"/ThesisII
 mkdir data
 cp -r $HOME/ThesisII/data/"$lang" "$TMPDIR"/ThesisII/data/
