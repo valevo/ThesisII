@@ -3,6 +3,10 @@ __pycache__/
 *$py.class
 
 
+# ignore only pickles in data
+# data/*_pkl/
+# data/*/*.pkl
+
 *_pkl/
 *.pkl
 
