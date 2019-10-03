@@ -6,11 +6,12 @@ import numpy.random as rand
 from functools import reduce
 
 
+sep = "■"
+
 
 def filter_speaker_restrict(sents, n, history_len):
     cur_sample = rand.randint(len(sents))
-    sampled_s = sents[cur_sample]
-    
+    sampled_s = sents[cur_sample].split(sep)
     yield sampled_s
     
     cur_hist = [cur_sample]
@@ -19,7 +20,7 @@ def filter_speaker_restrict(sents, n, history_len):
     
     while sampled < n:
         cur_sample = rand.randint(len(sents))
-        sampled_s = sents[cur_sample]
+        sampled_s = sents[cur_sample].split(sep)
         
         if not sampled_s:
             continue

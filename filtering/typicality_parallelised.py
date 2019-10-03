@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from data.corpus import Words, Sentences, Articles
+from data.corpus import Sentences
 
 from stats.stat_functions import compute_ranks, compute_freqs, merge_to_joint
 
 from stats.mle import Mandelbrot
 
-from stats.entropy import mandelbrot_entropy, neg_log_likelihood, empirical_entropy, typicality
+from stats.entropy import mandelbrot_entropy, typicality
 
 import numpy as np
 import numpy.random as rand
@@ -68,6 +68,8 @@ def sent_neg_log_prob(sent, zipf_model, rank_dict):
     return - np.sum(log_probs)
 
 
+sep = "■"
+
 # add safety measure against non-halting
 def filter_typicality_incremental(sents, zipf_model, rank_dict, auto_typ,
                                   epsilon, n):
@@ -83,7 +85,7 @@ def filter_typicality_incremental(sents, zipf_model, rank_dict, auto_typ,
         if cur_sample in used:
             continue
         
-        cur_sent = sents[cur_sample]
+        cur_sent = sents[cur_sample].split(sep)
         
         coeff = 1/(sampled + len(cur_sent))
         sent_nll = sent_neg_log_prob(cur_sent, zipf_model, rank_dict)

@@ -13,3 +13,8 @@ def wiki_from_pickles(pkls_dir, drop_titles=True):
                     yield a
             else:
                 yield from wiki
+                
+                
+def corpus_to_pickle(corpus, pkl_dir, pkl_name):
+    with open(pkl_dir + "/" + pkl_name + ".pkl", "wb") as handle:
+        pickle.dump(corpus, handle)
