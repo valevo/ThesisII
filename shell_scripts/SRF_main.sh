@@ -26,7 +26,7 @@ cp -r $HOME/ThesisII/data/reader.py "$TMPDIR"/ThesisII/data/
 cp -r $HOME/ThesisII/data/corpus.py "$TMPDIR"/ThesisII/data/
 
 
-python3.6 SRF_main.py --lang=$lang --n_tokens=1e6 --hist_len=2
+python3.6 SRF_main.py --lang=$lang --n_tokens=1000000 --hist_len=2
 
 
 cp -r $TMPDIR/ThesisII/results/"$lang"/ $HOME/ThesisII/results
