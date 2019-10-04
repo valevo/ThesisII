@@ -10,12 +10,17 @@ from functools import reduce
 def filter_speaker_restrict(sents, n, history_len):
     cur_sample = rand.randint(len(sents))
     sampled_s = sents[cur_sample]
-    
+    print("\n\n", flush=True)
+    print("SAMPLED_S", sampled_s, flush=True)
+    print("\n\n", flush=True)
     yield sampled_s
     
     cur_hist = [cur_sample]
     used = {cur_sample}
     sampled = len(sampled_s)
+    
+    print("CUR_HIST", cur_hist, flush=True)
+    print("\n\n", flush=True)
     
     while sampled < n:
         cur_sample = rand.randint(len(sents))
