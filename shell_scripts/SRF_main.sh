@@ -21,13 +21,13 @@ cd "$TMPDIR"/ThesisII
 
 echo
 
+lang=FI
+
 mkdir data
 cp -r $HOME/ThesisII/data/"$lang"_pkl "$TMPDIR"/ThesisII/data/
 cp -r $HOME/ThesisII/data/reader.py "$TMPDIR"/ThesisII/data/
 cp -r $HOME/ThesisII/data/corpus.py "$TMPDIR"/ThesisII/data/
 
-
-lang=FI
 
 # 2 4 8 16 32 64 81
 for h in 16; do
