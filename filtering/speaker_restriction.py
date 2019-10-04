@@ -32,9 +32,10 @@ def filter_speaker_restrict(sents, n, history_len):
         if np.intersect1d(sampled_s, cur_disallowed).size > 0:
             continue
         
-        if len(cur_hist) >= history_len:
-            cur_hist.pop(0)
         cur_hist.append(sampled_s)
+        if len(cur_hist) > history_len:
+            cur_hist.pop(0)
+        print("CUR_HIST", cur_hist, flush=True)
         
         used.add(cur_sample)
         sampled += len(sampled_s)
