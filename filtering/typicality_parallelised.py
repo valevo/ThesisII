@@ -80,6 +80,8 @@ def filter_typicality_incremental(sents, zipf_model, rank_dict, auto_typ,
     
     cur_nll = 0
     
+    num_not_found = 0
+    
     while sampled < n:
         cur_sample = rand.randint(len(sents))
         if cur_sample in used:
@@ -98,3 +100,7 @@ def filter_typicality_incremental(sents, zipf_model, rank_dict, auto_typ,
             cur_nll += sent_nll
             
             yield cur_sent
+        else:
+            num_not_found += 1
+            if num_not_found >= n:
+                raise RuntimeError("number of samples has outgrown n! aborting")    

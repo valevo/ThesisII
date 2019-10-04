@@ -9,8 +9,6 @@ module load Python/3.6.1-intel-2016b
 echo "Stat job $PBS_JOBID started at `date`"
 
 
-lang=FI
-
 #mkdir "$TMPDIR"/ThesisII
 #mkdir "$TMPDIR"/ThesisII/data
 #cp -r $HOME/ThesisII/data/"$lang" "$TMPDIR"/ThesisII/data
@@ -29,7 +27,14 @@ cp -r $HOME/ThesisII/data/reader.py "$TMPDIR"/ThesisII/data/
 cp -r $HOME/ThesisII/data/corpus.py "$TMPDIR"/ThesisII/data/
 
 
-python3.6 SRF_main_parallelised.py --lang=$lang --n_tokens=1000000 --hist_len=4
+lang=FI
+
+# 2 4 8 16 32 64 81
+for h in 16; do
+
+python3.6 SRF_main_parallelised.py --lang=$lang --n_tokens=1000000 --hist_len=$i
+
+done
 
 
 cp -r $TMPDIR/ThesisII/results/"$lang"/ $HOME/ThesisII/results

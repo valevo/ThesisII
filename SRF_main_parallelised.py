@@ -29,14 +29,13 @@ def sents_to_mp_array(sents):
     sents_joined = [sep.join(s) for s in sents]
     return Array(c_wchar_p, sents_joined)
 
-lang = "FI"
-wiki = list(wiki_from_pickles("data/"+lang+"_pkl"))
-mp_array = sents_to_mp_array((s for a in wiki for s in a))
-
 
 if __name__ == "__main__":
     lang, n, hist_len = parse_args()
     m = 10
+ 
+    wiki = list(wiki_from_pickles("data/"+lang+"_pkl"))
+    mp_array = sents_to_mp_array((s for a in wiki for s in a))    
     
 
     def filter_worker(i):
@@ -51,6 +50,6 @@ if __name__ == "__main__":
         
     i_ls = list(range(m))
     
-    with mp.Pool() as p:
+    with mp.Pool(4) as p:
         p.map(filter_worker, i_ls)    
     
