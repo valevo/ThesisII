@@ -29,25 +29,29 @@ def sents_to_mp_array(sents):
     sents_joined = [sep.join(s) for s in sents]
     return Array(c_wchar_p, sents_joined)
 
-lang = "FI"
-wiki = list(wiki_from_pickles("data/"+lang+"_pkl"))
-mp_array = sents_to_mp_array((s for a in wiki for s in a))
+#lang = "ALS"
 
 
 if __name__ == "__main__":
     lang, n, hist_len = parse_args()
     m = 10
     
+    wiki = list(wiki_from_pickles("data/"+lang+"_pkl"))
+    mp_array = sents_to_mp_array((s for a in wiki for s in a))
 
     def filter_worker(i):
         print("started ", i)
         cur_seed = int.from_bytes(os.urandom(4), byteorder='little')
         rand.seed(cur_seed)
-        filtered = list(filter_speaker_restrict(mp_array, n, hist_len))
+#        filtered = list(filter_speaker_restrict(mp_array, n, hist_len))
+        
+        rand_s = mp_array[rand.randint(len(mp_array))]
+        
+        print(len(mp_array))
         print("filtered ", i)
     
         name = "_".join((str(n), str(hist_len), str(i)))
-        corpus_to_pickle(filtered, "results/" + lang + "/SRF", name)
+#        corpus_to_pickle(filtered, "results/" + lang + "/SRF", name)
         
     i_ls = list(range(m))
     

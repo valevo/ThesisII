@@ -16,7 +16,6 @@ def parse_args():
     args = p.parse_args()
     return args.lang, args.n_tokens, args.hist_len
 
-
 if __name__ == "__main__":
     lang, n, hist_len = parse_args()
     m = 10
@@ -30,5 +29,3 @@ if __name__ == "__main__":
     
         name = "_".join((str(n), str(hist_len), str(m_i)))
         corpus_to_pickle(filtered, "results/" + lang + "/SRF", name)
-    
-    
