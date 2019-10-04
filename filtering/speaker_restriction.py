@@ -15,7 +15,7 @@ def filter_speaker_restrict(sents, n, history_len):
     print("\n\n", flush=True)
     yield sampled_s
     
-    cur_hist = [cur_sample]
+    cur_hist = [sampled_s]
     used = {cur_sample}
     sampled = len(sampled_s)
     
