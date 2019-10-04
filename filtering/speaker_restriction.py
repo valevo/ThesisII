@@ -41,5 +41,3 @@ def filter_speaker_restrict(sents, n, history_len):
         
         yield sampled_s
     
-    
-    
