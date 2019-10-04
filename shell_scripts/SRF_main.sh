@@ -18,7 +18,7 @@ lang=FI
 #cp -r $HOME/ThesisII/stats "$TMPDIR"/ThesisII
 
 
-rsync -a --progress $HOME/ThesisII "$TMPDIR"/ --exclude data --exclude .git
+rsync -a $HOME/ThesisII "$TMPDIR"/ --exclude data --exclude .git
 cd "$TMPDIR"/ThesisII
 
 echo
@@ -29,7 +29,7 @@ cp -r $HOME/ThesisII/data/reader.py "$TMPDIR"/ThesisII/data/
 cp -r $HOME/ThesisII/data/corpus.py "$TMPDIR"/ThesisII/data/
 
 
-python3.6 SRF_main.py --lang=$lang --n_tokens=1000000 --hist_len=4
+python3.6 SRF_main_parallelised.py --lang=$lang --n_tokens=1000000 --hist_len=4
 
 
 cp -r $TMPDIR/ThesisII/results/"$lang"/ $HOME/ThesisII/results
