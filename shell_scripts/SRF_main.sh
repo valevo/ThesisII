@@ -3,7 +3,7 @@
 #SBATCH -t 5:00:00
 #SBATCH --mem=70G
 
-
+module load pre2019
 module load Python/3.6.1-intel-2016b 
 
 echo "Stat job $PBS_JOBID started at `date`"
