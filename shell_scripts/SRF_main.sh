@@ -34,6 +34,10 @@ for h in 8 16 32 64 81; do
 
 python3.6 SRF_main_parallelised.py --lang=$lang --n_tokens=2500000 --hist_len=$h
 
+echo 
+echo "done with $h"
+echo 
+
 done
 
 
