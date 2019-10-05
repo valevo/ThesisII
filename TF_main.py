@@ -19,7 +19,7 @@ def parse_args():
 
 if __name__ == "__main__":
     lang, n, factor = parse_args()
-    big_n = lambda sents: len([w for s in sents for w in s])*.49
+    big_n = lambda wiki: len([w for a in wiki for s in a for w in s])*.49
     setup_m = 50
     m = 10
     
@@ -44,5 +44,3 @@ if __name__ == "__main__":
         
         name = "_".join((str(n), str(factor), str(m_i)))
         corpus_to_pickle(filtered, "results/" + lang + "/TF", name)
-        
-    
