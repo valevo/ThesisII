@@ -68,7 +68,7 @@ if __name__ == "__main__":
     
     i_ls = list(range(m))
     
-    with mp.Pool() as p:
+    with mp.Pool(6) as p:
         p.map(filter_worker, i_ls)
 
 
