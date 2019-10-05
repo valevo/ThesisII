@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -N 1
-#SBATCH -t 5:00:00
+#SBATCH -t 12:00:00
 #SBATCH --mem=70G
 
 module load pre2019
@@ -30,18 +30,23 @@ cp -r $HOME/ThesisII/data/corpus.py "$TMPDIR"/ThesisII/data/
 
 
 # 2 4 8 16 32
-for f in 4; do
+for f in 8; do
 
 python3.6 TF_main_parallelised.py --lang=$lang --n_tokens=2500000 --factor=$f
 
 echo 
 echo "done with factor $f at `date`"
-echo 
+
+cp -r $TMPDIR/ThesisII/results/$lang/TF $HOME/ThesisII/results/$lang/
+
+echo "and copied"
+echo
+
 
 done
 
 
-cp -r $TMPDIR/ThesisII/results/"$lang"/ $HOME/ThesisII/results
+# cp -r $TMPDIR/ThesisII/results/"$lang"/ $HOME/ThesisII/results
 
 
 echo "Job $PBS_JOBID ended at `date`"
