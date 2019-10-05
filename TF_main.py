@@ -19,7 +19,7 @@ def parse_args():
 
 if __name__ == "__main__":
     lang, n, factor = parse_args()
-    big_n = 3e6 # lambda wiki_len: wiki_len/2
+    big_n = lambda wiki: len([w for a in wiki for s in a for w in s])/2
     setup_m = 50
     m = 10
     
@@ -27,7 +27,7 @@ if __name__ == "__main__":
     sents = [s for a in wiki for s in a]
 
     zipf_model, rank_dict, auto_typicality, epsilon = setup_filtering(wiki, 
-                                                                      big_n, 
+                                                                      big_n(wiki), 
                                                                       n, 
                                                                       setup_m)
     print("\nModel and Epsilon established")

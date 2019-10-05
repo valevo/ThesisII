@@ -18,8 +18,10 @@ def filter_speaker_restrict(sents, n, history_len):
     sampled = len(sampled_s)
     
     num_not_found = 0
+    num_iter = 0
     
     while sampled < n:
+        num_iter += 1
         cur_sample = rand.randint(len(sents))
         sampled_s = sents[cur_sample]
         
@@ -33,8 +35,9 @@ def filter_speaker_restrict(sents, n, history_len):
         
         if np.intersect1d(sampled_s, cur_disallowed).size > 0:
             num_not_found += 1
-#            if num_not_found >= n:
-#                raise RuntimeError("number of samples has outgrown n! aborting")        
+            if num_not_found >= n:
+                print("NUM ITER: ", num_iter)                
+                raise RuntimeError("number of samples has outgrown n! aborting")        
             continue
 
         cur_hist.append(sampled_s)

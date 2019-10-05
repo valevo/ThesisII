@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -N 1
-#SBATCH -t 5:00:00
+#SBATCH -t 12:00:00
 #SBATCH --mem=70G
 
 module load pre2019
@@ -35,13 +35,18 @@ for h in 8 16 32 64 81; do
 python3.6 SRF_main_parallelised.py --lang=$lang --n_tokens=2500000 --hist_len=$h
 
 echo 
-echo "done with $h"
-echo 
+echo "done with hist_len $h at `date`"
+
+# cp -r $TMPDIR/ThesisII/results/$lang/SRF $HOME/ThesisII/results/SRF
+
+echo "and copied"
+echo
+
 
 done
 
 
-cp -r $TMPDIR/ThesisII/results/"$lang"/ $HOME/ThesisII/results
+# cp -r $TMPDIR/ThesisII/results/"$lang"/ $HOME/ThesisII/results
 
 
 echo "Job $PBS_JOBID ended at `date`"
