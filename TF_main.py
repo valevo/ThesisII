@@ -11,7 +11,7 @@ def parse_args():
     p.add_argument("--lang", type=str)
     p.add_argument("--n_tokens", type=int)
     p.add_argument("--factor", type=float,
-                   help="The factor to multiply epsilon with, determines"
+                   help="The factor to multiply epsilon with; determines"
                    "the degree of atypicality.")
     
     args = p.parse_args()
@@ -19,7 +19,7 @@ def parse_args():
 
 if __name__ == "__main__":
     lang, n, factor = parse_args()
-    big_n = lambda wiki: len([w for a in wiki for s in a for w in s])/2
+    big_n = lambda sents: len([w for s in sents for w in s])*.49
     setup_m = 50
     m = 10
     
