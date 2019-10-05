@@ -37,7 +37,7 @@ python3.6 SRF_main_parallelised.py --lang=$lang --n_tokens=2500000 --hist_len=$h
 echo 
 echo "done with hist_len $h at `date`"
 
-# cp -r $TMPDIR/ThesisII/results/$lang/SRF $HOME/ThesisII/results/SRF
+cp -r $TMPDIR/ThesisII/results/$lang/SRF $HOME/ThesisII/results/SRF
 
 echo "and copied"
 echo
