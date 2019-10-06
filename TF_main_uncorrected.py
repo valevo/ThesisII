@@ -33,10 +33,11 @@ if __name__ == "__main__":
                                                                          setup_m)
     print("\nModel and Epsilon established")
     print(auto_typ, mean_typ, std_typ)
-    print()
     
     
     epsilon = mean_typ - factor*std_typ
+    print("epsilon: ", epsilon)
+    print()
     
     for m_i in range(m):
         print("started ", m_i)        

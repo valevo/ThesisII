@@ -30,9 +30,9 @@ cp -r $HOME/ThesisII/data/corpus.py "$TMPDIR"/ThesisII/data/
 
 
 # 2 4 8 16 32
-for f in 2 4 6 8; do
+for f in 1 2; do
 
-python3.6 TF_main_parallelised.py --lang=$lang --n_tokens=2500000 --factor=$f
+python3.6 TF_main_uncorrected.py --lang=$lang --n_tokens=2500000 --factor=$f
 
 echo 
 echo "done with factor $f at `date`"
