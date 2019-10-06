@@ -23,7 +23,7 @@ if __name__ == "__main__":
     setup_m = 50
     m = 10
     
-    wiki = list(wiki_from_pickles("data/"+lang+"_pkl"))
+    wiki = list(wiki_from_pickles("data/"+lang+"_pkl", ))
     sents = [s for a in wiki for s in a]
 
     zipf_model, rank_dict, auto_typicality, epsilon = setup_filtering(wiki, 

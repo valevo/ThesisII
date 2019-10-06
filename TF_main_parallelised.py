@@ -41,9 +41,14 @@ if __name__ == "__main__":
     
     wiki = list(wiki_from_pickles("data/"+lang+"_pkl"))
     sents = [s for a in wiki for s in a]
+    
+    
+    big_corpus_size = big_n(wiki)
+    print("n_tokens wiki: ", len([w for a in wiki for s in a for w in s]))
+    print("n_tokens for big corpus: ", big_corpus_size)
 
     zipf_model, rank_dict, auto_typicality, epsilon = setup_filtering(wiki, 
-                                                                      big_n(wiki), 
+                                                                      big_corpus_size, 
                                                                       n, 
                                                                       setup_m)
     print("\nModel and Epsilon established")
