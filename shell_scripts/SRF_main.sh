@@ -30,7 +30,7 @@ cp -r $HOME/ThesisII/data/corpus.py "$TMPDIR"/ThesisII/data/
 
 
 # 2 4 8 16 32 64 81
-for h in 2 4 8 16 32 64 81; do
+for h in 81; do
 
 python3.6 SRF_main_parallelised.py --lang=$lang --n_tokens=2500000 --hist_len=$h
 
