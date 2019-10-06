@@ -21,7 +21,7 @@ def parse_args():
 if __name__ == "__main__":
     lang, n, factor = parse_args()
     big_n = lambda wiki: len([w for a in wiki for s in a for w in s])*.49
-    setup_m = 50
+    setup_m = 100
     m = 10
     
     wiki = list(wiki_from_pickles("data/"+lang+"_pkl"))
