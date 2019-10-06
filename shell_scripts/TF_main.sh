@@ -30,7 +30,7 @@ cp -r $HOME/ThesisII/data/corpus.py "$TMPDIR"/ThesisII/data/
 
 
 # 2 4 8 16 32
-for f in 1 2; do
+for f in 10 20 30; do
 
 python3.6 TF_main_uncorrected.py --lang=$lang --n_tokens=2500000 --factor=$f
 
