@@ -2,7 +2,7 @@
 
 from data.reader import wiki_from_pickles, corpus_to_pickle
 from stats.entropy import typicality
-from filtering.typicality import setup_filtering, filter_typicality_incremental
+from filtering.typicality_uncorrected import setup_filtering, filter_typicality_incremental
 
 import argparse
 
