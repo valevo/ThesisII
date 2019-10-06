@@ -40,26 +40,26 @@ def typicality(zipf_model, joint_rank_freqs):
 
 
 
-def construct_typical_set(zipf_model, corpus, m, k):
-    rs, fs = compute_ranks(corpus), compute_freqs(corpus)
-    joints = merge_to_joint(rs, fs)
-    auto_typicality = typicality(zipf_model, joints)
-    
-    typicalities = []
-    
-    for i in range(k):
-        sub1 = Sentences.subsample(corpus, k)
-        sub2 = Sentences.subsample(corpus, k)
-            
-        sub_ranks = compute_ranks(sub1)
-        sub_freqs = compute_freqs(sub2)
-        sub_joints = merge_to_joint(sub_ranks, sub_freqs)
-
-        sub_typicality = typicality(zipf_model, sub_joints)
-        corrected_typicality = sub_typicality - auto_typicality
-        
-        typicalities.append(corrected_typicality)
-        
+#def construct_typical_set(zipf_model, corpus, m, k):
+#    rs, fs = compute_ranks(corpus), compute_freqs(corpus)
+#    joints = merge_to_joint(rs, fs)
+#    auto_typicality = typicality(zipf_model, joints)
+#    
+#    typicalities = []
+#    
+#    for i in range(k):
+#        sub1 = Sentences.subsample(corpus, k)
+#        sub2 = Sentences.subsample(corpus, k)
+#            
+#        sub_ranks = compute_ranks(sub1)
+#        sub_freqs = compute_freqs(sub2)
+#        sub_joints = merge_to_joint(sub_ranks, sub_freqs)
+#
+#        sub_typicality = typicality(zipf_model, sub_joints)
+#        corrected_typicality = sub_typicality - auto_typicality
+#        
+#        typicalities.append(corrected_typicality)
+#        
     
     
 

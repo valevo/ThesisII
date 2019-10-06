@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -N 1
-#SBATCH -t 12:00:00
+#SBATCH -t 20:00:00
 #SBATCH --mem=70G
 
 module load pre2019
@@ -21,7 +21,7 @@ cd "$TMPDIR"/ThesisII
 
 echo
 
-lang=FI
+lang=EO
 
 mkdir data
 cp -r $HOME/ThesisII/data/"$lang"_pkl "$TMPDIR"/ThesisII/data/
@@ -30,7 +30,7 @@ cp -r $HOME/ThesisII/data/corpus.py "$TMPDIR"/ThesisII/data/
 
 
 # 2 4 8 16 32 64 81
-for h in 81; do
+for h in 2 4 8 16 32 64 81; do
 
 python3.6 SRF_main_parallelised.py --lang=$lang --n_tokens=2500000 --hist_len=$h
 
