@@ -19,9 +19,12 @@ echo "Stat job $PBS_JOBID started at `date`"
 rsync -a $HOME/ThesisII "$TMPDIR"/ --exclude data --exclude .git
 cd "$TMPDIR"/ThesisII
 
-echo
 
-lang=TR
+lang=KO
+
+echo 
+echo "language: $lang"
+
 
 mkdir data
 cp -r $HOME/ThesisII/data/"$lang"_pkl "$TMPDIR"/ThesisII/data/
