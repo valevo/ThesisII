@@ -74,11 +74,14 @@ def filter_typicality_incremental(sents, zipf_model, rank_dict, epsilon, n):
     
     while sampled < n:
         num_iter += 1
+        
         cur_sample = rand.randint(len(sents))
         if cur_sample in used:
             continue
         
         cur_sent = sents[cur_sample]
+        if not cur_sent:
+            continue
         
         coeff = 1/(sampled + len(cur_sent))
         sent_nll = sent_neg_log_prob(cur_sent, zipf_model, rank_dict)
