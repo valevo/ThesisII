@@ -96,9 +96,9 @@ def filter_typicality_incremental(sents, zipf_model, rank_dict, epsilon, n):
             yield cur_sent
         else:
             num_not_found += 1
-            if num_not_found >= n:
-                print("NUM ITER: ", num_iter)                
-                raise RuntimeError("number of samples has outgrown n! aborting")        
+#            if num_not_found >= n:
+#                print("NUM ITER: ", num_iter)                
+#                raise RuntimeError("number of samples has outgrown n! aborting")        
                 
                 
     print("NUM ITER: ", num_iter)
