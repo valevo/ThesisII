@@ -21,7 +21,7 @@ cd "$TMPDIR"/ThesisII
 
 echo
 
-lang=EO
+lang=TR
 
 mkdir data
 cp -r $HOME/ThesisII/data/"$lang"_pkl "$TMPDIR"/ThesisII/data/

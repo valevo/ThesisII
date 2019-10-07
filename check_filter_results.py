@@ -58,7 +58,7 @@ if __name__ == "__main__":
     
     
     # TF
-    factors = list(map(str, [50.0, 100.0]))
+    factors = list(map(str, [500.0]))
     tfs0 = dict()
     for f in factors:
         with open(lang_dir + "TF/" + str(n) + "_" + f + "_0.pkl", "rb") as handle:
