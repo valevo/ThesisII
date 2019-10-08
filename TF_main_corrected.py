@@ -6,6 +6,8 @@ from stats.stat_functions import compute_freqs, merge_to_joint
 from stats.entropy import typicality
 from filtering.typicality_uncorrected import setup_filtering, filter_typicality_incremental
 
+from operator import lt, gt
+
 import argparse
 
 def parse_args():
@@ -33,18 +35,20 @@ if __name__ == "__main__":
                                                                          big_n(wiki), 
                                                                          n, 
                                                                          setup_m)
+    
+    mean_corrected = abs(mean_typ - auto_typ)
+    epsilon_f_plus = mean_corrected + std_typ*factor
+    epsilon_f_minus = - epsilon_f_plus
+    
     print("\nModel and Epsilon established")
     print(auto_typ, mean_typ, std_typ)
+    print(epsilon_f_minus, epsilon_f_plus)
     
-    
-    epsilon = mean_typ - factor*std_typ
-    print("epsilon: ", epsilon)
-    print()
     
     for m_i in range(m):
         print("started ", m_i)        
         filtered = list(filter_typicality_incremental(sents, zipf_model, 
-                        rank_dict, epsilon, n))
+                        rank_dict, n, epsilon_f_minus, lt))
         filtered_freqs = compute_freqs(Sentences(filtered))
         print("filtered ", m_i, " typicality: ", 
               typicality(zipf_model, merge_to_joint(rank_dict, filtered_freqs)))
