@@ -101,6 +101,7 @@ def filter_typicality_incremental(sents, zipf_model, rank_dict, auto_typ, n,
             
             yield cur_sent
         else:
+            print("cur-auto: ", cur_typ - auto_typ)
             num_not_found += 1
 #            if num_not_found >= n:
 #                print("NUM ITER: ", num_iter)                
