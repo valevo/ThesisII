@@ -4,7 +4,7 @@ from data.reader import wiki_from_pickles, corpus_to_pickle
 from data.corpus import Sentences
 from stats.stat_functions import compute_freqs, merge_to_joint
 from stats.entropy import typicality
-from filtering.typicality_uncorrected import setup_filtering, filter_typicality_incremental
+from filtering.typicality_corrected import setup_filtering, filter_typicality_incremental
 
 from operator import lt, gt
 
