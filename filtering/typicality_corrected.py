@@ -61,7 +61,7 @@ def sent_neg_log_prob(sent, zipf_model, rank_dict):
 
 
 # add safety measure against non-halting
-def filter_typicality_incremental(sents, zipf_model, rank_dict, n, 
+def filter_typicality_incremental(sents, zipf_model, rank_dict, auto_typ, n, 
                                   epsilon, direction):
     
     if epsilon > 0 and direction(0, 1):
@@ -94,7 +94,7 @@ def filter_typicality_incremental(sents, zipf_model, rank_dict, n,
         
         cur_typ = theoretical_entropy - coeff*(cur_nll + sent_nll)
         
-        if direction(cur_typ, epsilon):
+        if direction(cur_typ - auto_typ, epsilon):
             used.add(cur_sample)
             sampled += len(cur_sent)
             cur_nll += sent_nll

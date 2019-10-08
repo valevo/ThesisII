@@ -48,7 +48,7 @@ if __name__ == "__main__":
     for m_i in range(m):
         print("started ", m_i)        
         filtered = list(filter_typicality_incremental(sents, zipf_model, 
-                        rank_dict, n, epsilon_f_minus, lt))
+                        rank_dict, auto_typ, n, epsilon_f_minus, lt))
         filtered_freqs = compute_freqs(Sentences(filtered))
         print("filtered ", m_i, " typicality: ", 
               typicality(zipf_model, merge_to_joint(rank_dict, filtered_freqs)))
