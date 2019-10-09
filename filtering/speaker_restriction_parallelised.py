@@ -50,12 +50,12 @@ def filter_speaker_restrict(sents, n, history_len):
         sampled += len(sampled_s)
         
         if sampled % 1e5 == 0:
-            print("sampled/1e5: ", sampled/1e5)
+            print("sampled/1e5: ", sampled/1e5, flush=True)
         
         yield sampled_s
     
     
-    print("NUM ITER: ", num_iter)
-    print("NUM NOT FOUND: ", num_not_found)
+    print("NUM ITER: ", num_iter, flush=True)
+    print("NUM NOT FOUND: ", num_not_found, flush=True)
     
     

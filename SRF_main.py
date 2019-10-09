@@ -23,9 +23,9 @@ if __name__ == "__main__":
     wiki = list(wiki_from_pickles("data/"+lang+"_pkl"))
     sents = [s for a in wiki for s in a]
     for m_i in range(m):
-        print("started ", m_i)
+        print("started ", m_i, flush=True)
         filtered = list(filter_speaker_restrict(sents, n, hist_len))
-        print("filtered ", m_i)
+        print("filtered ", m_i, flush=True)
     
         name = "_".join((str(n), str(hist_len), str(m_i)))
         corpus_to_pickle(filtered, "results/" + lang + "/SRF", name)
