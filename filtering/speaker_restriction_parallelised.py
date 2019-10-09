@@ -49,6 +49,9 @@ def filter_speaker_restrict(sents, n, history_len):
         used.add(cur_sample)
         sampled += len(sampled_s)
         
+        if sampled % 1e5 == 0:
+            print("sampled/1e5: ", sampled/1e5)
+        
         yield sampled_s
     
     
