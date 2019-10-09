@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from data.corpus import Words, Sentences, Articles
+from data.corpus import Sentences
 
 from stats.stat_functions import compute_ranks, compute_freqs, merge_to_joint
 
 from stats.mle import Mandelbrot
 
-from stats.entropy import mandelbrot_entropy, neg_log_likelihood, empirical_entropy, typicality
+from stats.entropy import mandelbrot_entropy, typicality
 
 import numpy as np
 import numpy.random as rand
@@ -25,9 +25,9 @@ def get_model(corpus, n):
                                     method="powell", full_output=True)    
     mandelbrot.register_fit(mandelbrot_fit)
     mandelbrot.print_result()
+    auto_typ = typicality(mandelbrot, joint)
     
-    auto_typicality = typicality(mandelbrot, joint)    
-    return big_ranks, mandelbrot, auto_typicality
+    return big_ranks, mandelbrot, auto_typ
 
 
 def establish_typical_set(corpus, rank_dict, zipf_model, n, m):
@@ -43,21 +43,13 @@ def establish_typical_set(corpus, rank_dict, zipf_model, n, m):
         typicalities.append(sub_typicality)
             
     mean_typ, std_typ = np.mean(typicalities), np.var(typicalities)**.5    
-    
     return mean_typ, std_typ
-
-
-def corrected_epsilon(mean_typ, std_typ, auto_typ):
-    corrected_mean = mean_typ - auto_typ
-    return corrected_mean + std_typ if corrected_mean >= 0\
-            else corrected_mean - std_typ
 
 
 def setup_filtering(corpus, big_n, k, m):
     rank_dict, zipf_model, auto_typ = get_model(corpus, big_n)
-    
     mean_typ, std_typ = establish_typical_set(corpus, rank_dict, zipf_model, k, m)
-    return zipf_model, rank_dict, auto_typ, corrected_epsilon(mean_typ, std_typ, auto_typ)
+    return zipf_model, rank_dict, mean_typ, std_typ, auto_typ
     
 
 def sent_neg_log_prob(sent, zipf_model, rank_dict):
@@ -69,8 +61,13 @@ def sent_neg_log_prob(sent, zipf_model, rank_dict):
 
 
 # add safety measure against non-halting
-def filter_typicality_incremental(sents, zipf_model, rank_dict, auto_typ,
-                                  epsilon, n):
+def filter_typicality_incremental(sents, zipf_model, rank_dict, auto_typ, n, 
+                                  epsilon, direction):
+    
+    if epsilon > 0 and direction(0, 1):
+        raise ValueError("use EITHER epsilon < 0 and direction == < "
+                         "OR epsilon > 0 and direction == >")
+    
     sampled = 0
     used = set()
     
@@ -83,18 +80,21 @@ def filter_typicality_incremental(sents, zipf_model, rank_dict, auto_typ,
     
     while sampled < n:
         num_iter += 1
+        
         cur_sample = rand.randint(len(sents))
         if cur_sample in used:
             continue
         
         cur_sent = sents[cur_sample]
+        if not cur_sent:
+            continue
         
         coeff = 1/(sampled + len(cur_sent))
         sent_nll = sent_neg_log_prob(cur_sent, zipf_model, rank_dict)
         
         cur_typ = theoretical_entropy - coeff*(cur_nll + sent_nll)
         
-        if cur_typ - auto_typ < epsilon:
+        if direction(cur_typ - auto_typ, epsilon):
             used.add(cur_sample)
             sampled += len(cur_sent)
             cur_nll += sent_nll
@@ -102,11 +102,10 @@ def filter_typicality_incremental(sents, zipf_model, rank_dict, auto_typ,
             yield cur_sent
         else:
             num_not_found += 1
-            if num_not_found >= n:
-                print("NUM ITER: ", num_iter)                
-                raise RuntimeError("number of samples has outgrown n! aborting")        
+#            if num_not_found >= n:
+#                print("NUM ITER: ", num_iter)                
+#                raise RuntimeError("number of samples has outgrown n! aborting")        
                 
                 
     print("NUM ITER: ", num_iter)
     print("NUM NOT FOUND: ", num_not_found)
-            

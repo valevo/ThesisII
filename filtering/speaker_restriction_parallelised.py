@@ -25,7 +25,7 @@ def filter_speaker_restrict(sents, n, history_len):
         num_iter += 1
         
         cur_sample = rand.randint(len(sents))
-        sampled_s = sents[cur_sample].split(sep)
+        sampled_s = sents[cur_sample].strip().split(sep)
         
         if not sampled_s:
             continue
