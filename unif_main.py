@@ -1,0 +1,31 @@
+# -*- coding: utf-8 -*-
+
+from data.reader import wiki_from_pickles, corpus_to_pickle
+from data.corpus import Sentences
+from stats.stat_functions import compute_freqs, merge_to_joint
+
+
+import argparse
+
+def parse_args():
+    p = argparse.ArgumentParser()
+    
+    p.add_argument("--lang", type=str)
+    p.add_argument("--n_tokens", type=int)
+    p.add_argument("--factor", type=float,
+                   help="The factor to multiply epsilon with; determines"
+                   "the degree of atypicality.")
+    
+    args = p.parse_args()
+    return args.lang, args.n_tokens, args.factor
+
+
+if __name__ == "__main__":
+    lang, n, factor = parse_args()
+    big_n = lambda wiki: len([w for a in wiki for s in a for w in s])*.49
+    setup_m = 100
+    m = 10
+    
+    wiki = list(wiki_from_pickles("data/"+lang+"_pkl"))
+    sents = [s for a in wiki for s in a]
+    
