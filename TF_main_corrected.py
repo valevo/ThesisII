@@ -22,6 +22,7 @@ def parse_args():
     args = p.parse_args()
     return args.lang, args.n_tokens, args.factor
 
+
 if __name__ == "__main__":
     lang, n, factor = parse_args()
     big_n = lambda wiki: len([w for a in wiki for s in a for w in s])*.49
