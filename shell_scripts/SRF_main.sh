@@ -20,7 +20,7 @@ rsync -a $HOME/ThesisII "$TMPDIR"/ --exclude data --exclude .git
 cd "$TMPDIR"/ThesisII
 
 
-lang=VI
+lang=NO
 
 echo 
 echo "language: $lang"
