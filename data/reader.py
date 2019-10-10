@@ -23,3 +23,13 @@ def corpus_to_pickle(corpus, pkl_dir, pkl_name):
         pickle.dump(corpus, handle)
         
         
+def corpora_from_pickles(pkls_dir, names):
+    files = os.listdir(pkls_dir)
+    
+    for f in files:
+        with open(pkls_dir + "/" + f, "rb") as handle:
+            param_vals = list(map(lambda x: int(float(x)), 
+                                  f.replace(".pkl", "").split("_")))
+            param_dict = dict(zip(names, param_vals))
+            cur_corp = pickle.load(handle)
+            yield param_dict, cur_corp
