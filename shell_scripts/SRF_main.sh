@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -N 1
-#SBATCH -t 20:00:00
+#SBATCH -t 30:00:00
 #SBATCH --mem=70G
 
 module load pre2019
@@ -20,7 +20,7 @@ rsync -a $HOME/ThesisII "$TMPDIR"/ --exclude data --exclude .git
 cd "$TMPDIR"/ThesisII
 
 
-lang=EO
+lang=ID
 
 echo 
 echo "language: $lang"
@@ -33,9 +33,9 @@ cp -r $HOME/ThesisII/data/corpus.py "$TMPDIR"/ThesisII/data/
 
 
 # 2 4 8 16 32 64 81
-for h in 2 4 8 16 32 64 81; do
+for h in 81; do
 
-python3.6 SRF_main_parallelised.py --lang=$lang --n_tokens=1000000 --hist_len=$h
+python3.6 SRF_main_parallelised.py --lang=$lang --n_tokens=2500000 --hist_len=$h
 
 echo 
 echo "done with hist_len $h at `date`"
