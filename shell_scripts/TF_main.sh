@@ -32,7 +32,8 @@ cp -r $HOME/ThesisII/data/corpus.py "$TMPDIR"/ThesisII/data/
 
 
 # 2 4 8 16 32
-for f in 500 750 1000 1250 1500 1750 2000; do
+# 500 750 1000 1250 1500 1750 2000
+for f in 2 4 8 16 32; do
 
 python3.6 TF_main_parallelised.py --lang=$lang --n_tokens=2500000 --factor=$f
 
