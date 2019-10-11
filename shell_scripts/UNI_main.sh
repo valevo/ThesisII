@@ -29,7 +29,7 @@ for lang in EO FI ID KO NO TR VI; do
     echo "language: $lang"
     cp -r $HOME/ThesisII/data/"$lang"_pkl "$TMPDIR"/ThesisII/data/
 
-    python3.6 UNI_main.py --lang=$lang --n_tokens=2500000
+    python3.6 UNI_main.py --lang=$lang --n_tokens=1000000
 
     cp -r $TMPDIR/ThesisII/results/$lang/UNI $HOME/ThesisII/results/$lang/
 
