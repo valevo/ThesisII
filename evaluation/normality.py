@@ -8,17 +8,7 @@ from lexical_diversity import lex_div
 
 import matplotlib.pyplot as plt
 
-if __name__ == "__main__":
-#    wiki = list(wiki_from_pickles("data/ALS_pkl"))
-    
-#    m = 10
-#    n = int(5e5)
-
-    
-    
-#    unifs = [Sentences.subsample(wiki, n) for _ in range(m)]
-#    mtld_dist_unif = [lex_div.mtld(list(u.tokens())) for u in unifs] 
-    
+if __name__ == "__main__":    
     n = 100000
     d = "results/ALS/"
     
@@ -30,7 +20,6 @@ if __name__ == "__main__":
     tf_samples = corpora_from_pickles(d + "TF", names=["n", "f", "i"])
     tf_100 = [Sentences(c) for name_d, c in tf_samples if name_d["n"] == n and 
                                                   name_d["f"] == 100]
-    
     
     uni_samples = corpora_from_pickles(d + "UNI", names=["n", "i"])
     uni = [Sentences(c) for name_d, c in uni_samples if name_d["n"] == n]

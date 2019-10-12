@@ -58,7 +58,8 @@ if __name__ == "__main__":
     
     
     # TF
-    factors = list(map(str, [500., 750., 1000., 1250.]))
+    # 2., 4., 8., 16., 500., 750., 1000., 1250.
+    factors = list(map(str, [2., 4., 8., 16., 500., 1250.]))
     tfs0 = dict()
     for f in factors:
         with open(lang_dir + "TF/" + str(n) + "_" + f + "_0.pkl", "rb") as handle:
@@ -68,7 +69,7 @@ if __name__ == "__main__":
         with open(lang_dir + "TF/" + str(n) + "_" + f + "_1.pkl", "rb") as handle:
             tfs1[f] = pickle.load(handle)
         
-    colors = ["purple", "blue", "red", "orange", "green", "yellow"]
+    colors = ["purple", "blue", "red", "orange", "green", "yellow", "grey", "black"]
     for c, (k, v) in zip(colors, tfs0.items()):
         tf_ranks = compute_ranks(Sentences(tfs1[k]))
         tf_freqs = compute_freqs(Sentences(v))
