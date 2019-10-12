@@ -33,8 +33,8 @@ cp -r $HOME/ThesisII/data/corpus.py "$TMPDIR"/ThesisII/data/
 
 # 2 4 8 16 32
 # 500 750 1000 1250 1500 1750 2000
-start=3
-end=27
+start=30
+end=48
 stepsize=3
 
 for f in $(seq $start $stepsize $end); do
