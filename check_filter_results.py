@@ -59,7 +59,7 @@ if __name__ == "__main__":
     
     # TF
     # 2., 4., 8., 16., 500., 750., 1000., 1250.
-    factors = list(map(str, [2., 4., 8., 16., 500., 1250.]))
+    factors = list(map(str, [16., 24., 27., 500., 1250.]))
     tfs0 = dict()
     for f in factors:
         with open(lang_dir + "TF/" + str(n) + "_" + f + "_0.pkl", "rb") as handle:

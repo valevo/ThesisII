@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -N 1
-#SBATCH -t 5:00:00
+#SBATCH -t 10:00:00
 #SBATCH --mem=70G
 
 module load pre2019
@@ -33,9 +33,9 @@ cp -r $HOME/ThesisII/data/corpus.py "$TMPDIR"/ThesisII/data/
 
 # 2 4 8 16 32
 # 500 750 1000 1250 1500 1750 2000
-start=30
-end=48
-stepsize=3
+start=27
+end=32
+stepsize=1
 
 for f in $(seq $start $stepsize $end); do
 
