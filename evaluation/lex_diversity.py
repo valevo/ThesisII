@@ -1,34 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from data.corpus import Sentences
 from data.reader import wiki_from_pickles, corpora_from_pickles
+from data.corpus import Sentences
 
-from stats.stat_functions import compute_vocab_size
 
-import numpy.random as rand
+from lexical_diversity import lex_div
 
 import matplotlib.pyplot as plt
 
-
-def sent_subsample(sents, n_toks):
-    n_sampled = 0
-    
-    used = set()
-    
-    while n_sampled < n_toks:
-        cur_ind = rand.randint(len(sents))
-        if cur_ind in used:
-            continue
-        sampled_sent = sents.elements[cur_ind]
-        
-        yield sampled_sent
-        n_sampled += len(sampled_sent)
-        used.add(cur_ind)
-           
-
-if __name__ == "__main__":
+if __name__ == "__main__":    
     n = 100000
     d = "results/ALS/"
+    
     
     ## LOAD CORPORA
     # SRFs    
@@ -50,37 +33,32 @@ if __name__ == "__main__":
     uni = [Sentences(c) for name_d, c in uni_samples if name_d["n"] == n]
     
     
-    ntoks = list(range(n//1000, n, n//10))
+    
+
+    for subcorp_set, name, colour in zip([srf_10, srf_20, srf_30, tf_50, tf_100, uni], 
+                                 ["SRF10", "SRF20", "SRF30", "TF50", "TF100", "UNI"],
+                                 ["green", "blue", "brown", "yellow", "red", "purple"]):
+        
+        mtlds = [lex_div.mtld(list(subcorp.tokens())) for subcorp in subcorp_set]
+        print(name)
+        
+        plt.hist(mtlds, bins=5, color=colour, label=name)
+    
+    plt.title("MTLD")    
+    plt.legend()
+    plt.show()
+    
     
     for subcorp_set, name, colour in zip([srf_10, srf_20, srf_30, tf_50, tf_100, uni], 
                                  ["SRF10", "SRF20", "SRF30", "TF50", "TF100", "UNI"],
                                  ["green", "blue", "brown", "yellow", "red", "purple"]):
+        
+        hdds = [lex_div.hdd(list(subcorp.tokens())) for subcorp in subcorp_set]
+        print(name)
+        
+        plt.hist(hdds, bins=5, color=colour, label=name)
     
-        for i, subcorp in enumerate(subcorp_set):
-        
-#            rand_ind = rand.randint(len(subcorp_set))
-            print(i)
-#            
-#            subcorp = subcorp_set[rand_ind]
-#        
-            vocab_sizes = []
-            for n in ntoks:
-                subsample = Sentences(sent_subsample(subcorp, n))
-
-                vcb_len = compute_vocab_size(subsample)
-                print(vcb_len, end=" ", flush=True)
-
-                vocab_sizes.append(vcb_len)
-
-            print("\n")
-            plt.plot(ntoks, vocab_sizes, '--', color=colour, 
-                     label=(name if i == 1 else None))
-        
+    plt.title("HD-D")    
     plt.legend()
-    plt.show()
-        
-            
-        
-        
-      
-        
+    plt.show()    
+    

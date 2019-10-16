@@ -1,30 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from data.reader import corpora_from_pickles
 from data.corpus import Sentences
-from data.reader import wiki_from_pickles, corpora_from_pickles
 
-from stats.stat_functions import compute_vocab_size
-
-import numpy.random as rand
 
 import matplotlib.pyplot as plt
 
-
-def sent_subsample(sents, n_toks):
-    n_sampled = 0
-    
-    used = set()
-    
-    while n_sampled < n_toks:
-        cur_ind = rand.randint(len(sents))
-        if cur_ind in used:
-            continue
-        sampled_sent = sents.elements[cur_ind]
-        
-        yield sampled_sent
-        n_sampled += len(sampled_sent)
-        used.add(cur_ind)
-           
 
 if __name__ == "__main__":
     n = 100000
@@ -50,37 +31,48 @@ if __name__ == "__main__":
     uni = [Sentences(c) for name_d, c in uni_samples if name_d["n"] == n]
     
     
-    ntoks = list(range(n//1000, n, n//10))
-    
+    # sent len dists
     for subcorp_set, name, colour in zip([srf_10, srf_20, srf_30, tf_50, tf_100, uni], 
                                  ["SRF10", "SRF20", "SRF30", "TF50", "TF100", "UNI"],
                                  ["green", "blue", "brown", "yellow", "red", "purple"]):
-    
+        
+        
+        all_lens = []
         for i, subcorp in enumerate(subcorp_set):
+            lens = list(map(len, subcorp.sentences()))
+            all_lens.extend(lens)
         
-#            rand_ind = rand.randint(len(subcorp_set))
-            print(i)
-#            
-#            subcorp = subcorp_set[rand_ind]
-#        
-            vocab_sizes = []
-            for n in ntoks:
-                subsample = Sentences(sent_subsample(subcorp, n))
-
-                vcb_len = compute_vocab_size(subsample)
-                print(vcb_len, end=" ", flush=True)
-
-                vocab_sizes.append(vcb_len)
-
-            print("\n")
-            plt.plot(ntoks, vocab_sizes, '--', color=colour, 
-                     label=(name if i == 1 else None))
+        i = 0
+        plt.hist(all_lens, bins=100, color=colour, histtype="step",
+                     label=(name if i == 0 else None))
         
+        print(name)
+    
+    plt.title("Sentence Lengths")
     plt.legend()
     plt.show()
-        
             
+    
+    
+    # word len dists
+    for subcorp_set, name, colour in zip([srf_10, srf_20, srf_30, tf_50, tf_100, uni], 
+                                 ["SRF10", "SRF20", "SRF30", "TF50", "TF100", "UNI"],
+                                 ["green", "blue", "brown", "yellow", "red", "purple"]):
         
         
-      
+        all_lens = []
+        for i, subcorp in enumerate(subcorp_set):
+            lens = [len(w) for s in subcorp.sentences() for w in s]
+            all_lens.extend(lens)
         
+        i = 0
+        plt.hist(all_lens, bins=100, color=colour, histtype="step",
+                     label=(name if i == 0 else None))
+        
+        print(name)
+    
+    plt.title("Word Lengths")
+    plt.legend()
+    plt.show()
+            
+            

@@ -54,6 +54,7 @@ class Articles(Corpus):
         
         return cls(list(subcorpus))
 
+
 class Sentences(Corpus):
     def sentences(self):
         yield from self.elements
@@ -61,7 +62,6 @@ class Sentences(Corpus):
     def tokens(self):
         for sent in self.elements:
             yield from sent
-            
             
     @classmethod
     def subsample(cls, corpus_list, n_tokens):
@@ -87,6 +87,7 @@ class Sentences(Corpus):
 
         subcorpus = sample(corpus_list, n_tokens)
         return cls(list(subcorpus))
+
 
 class Words(Corpus):    
     def sentences(self):
