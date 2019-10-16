@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -N 1
-#SBATCH -t 5:00:00
+#SBATCH -t 20:00:00
 #SBATCH --mem=70G
 
 module load pre2019
@@ -21,7 +21,7 @@ cd "$TMPDIR"/ThesisII
 
 echo
 
-lang=KO
+lang=EO
 echo
 echo "language: $lang"
 
@@ -30,16 +30,14 @@ cp -r $HOME/ThesisII/data/"$lang"_pkl "$TMPDIR"/ThesisII/data/
 cp -r $HOME/ThesisII/data/reader.py "$TMPDIR"/ThesisII/data/
 cp -r $HOME/ThesisII/data/corpus.py "$TMPDIR"/ThesisII/data/
 
-
-# 2 4 8 16 32
-# 500 750 1000 1250 1500 1750 2000
-start=3
-end=27
-stepsize=3
+# seq 3 3 27
+start=2
+end=26
+stepsize=4
 
 for f in $(seq $start $stepsize $end); do
 
-python3.6 TF_main_parallelised.py --lang=$lang --n_tokens=2500000 --factor=$f
+python3.6 TF_main_parallelised.py --lang=$lang --n_tokens=1000000 --factor=$f
 
 echo 
 echo "done with factor $f at `date`"
