@@ -21,7 +21,7 @@ cd "$TMPDIR"/ThesisII
 
 echo
 
-lang=NO
+lang=TR
 echo
 echo "language: $lang"
 
