@@ -5,6 +5,62 @@ from data.corpus import Sentences
 
 
 import matplotlib.pyplot as plt
+import seaborn as sns
+
+import numpy as np
+import numpy.random as rand
+
+
+def sent_len_dists(subcorp_sets, names):
+    all_xs = []
+    all_ys = []
+    means_stddevs = dict()
+    for subcorp_set, name in zip(subcorp_sets, names):
+        
+        i = rand.randint(len(subcorp_set))
+        
+        all_lens = [len(s) for s in subcorp_set[i].sentences()]# if len(s) < 50]
+        all_xs.extend(all_lens)
+        
+        lbls = [name]*len(all_lens)
+        all_ys.extend(lbls)
+        
+        means_stddevs[name] = (np.mean(all_lens), np.var(all_lens)**.5)
+    
+    print(means_stddevs)
+    sns.violinplot(x=all_xs, y=all_ys, cut=0)
+    plt.title("Sent Lens")
+    plt.show()    
+    return means_stddevs
+    
+
+def word_len_dists(subcorp_sets, names):
+    all_xs = []
+    all_ys = []
+    means_stddevs = dict()
+    for subcorp_set, name in zip(subcorp_sets, names):
+        
+        i = rand.randint(len(subcorp_set))
+        
+        all_lens = [len(w) for w in subcorp_set[i].tokens()]# if len(w) < 20]
+        all_xs.extend(all_lens)
+        
+        lbls = [name]*len(all_lens)
+        all_ys.extend(lbls)
+        
+        means_stddevs[name] = (np.mean(all_lens), np.var(all_lens)**.5)
+    
+    print(means_stddevs)
+    sns.violinplot(x=all_xs, y=all_ys, cut=0)
+    plt.title("Word Lens")
+    plt.show()    
+    return means_stddevs
+
+
+def main(subcorp_sets, names):
+    sent_mean_dict = sent_len_dists(subcorp_sets, names)
+    word_mean_dict = word_len_dists(subcorp_sets, names)
+    
 
 
 if __name__ == "__main__":
@@ -31,48 +87,9 @@ if __name__ == "__main__":
     uni = [Sentences(c) for name_d, c in uni_samples if name_d["n"] == n]
     
     
-    # sent len dists
-    for subcorp_set, name, colour in zip([srf_10, srf_20, srf_30, tf_50, tf_100, uni], 
-                                 ["SRF10", "SRF20", "SRF30", "TF50", "TF100", "UNI"],
-                                 ["green", "blue", "brown", "yellow", "red", "purple"]):
-        
-        
-        all_lens = []
-        for i, subcorp in enumerate(subcorp_set):
-            lens = list(map(len, subcorp.sentences()))
-            all_lens.extend(lens)
-        
-        i = 0
-        plt.hist(all_lens, bins=100, color=colour, histtype="step",
-                     label=(name if i == 0 else None))
-        
-        print(name)
-    
-    plt.title("Sentence Lengths")
-    plt.legend()
-    plt.show()
-            
+    subcorp_sets = [srf_10, srf_20, srf_30, tf_50, tf_100, uni]
+    names = ["SRF10", "SRF20", "SRF30", "TF50", "TF100", "UNI"]
     
     
-    # word len dists
-    for subcorp_set, name, colour in zip([srf_10, srf_20, srf_30, tf_50, tf_100, uni], 
-                                 ["SRF10", "SRF20", "SRF30", "TF50", "TF100", "UNI"],
-                                 ["green", "blue", "brown", "yellow", "red", "purple"]):
-        
-        
-        all_lens = []
-        for i, subcorp in enumerate(subcorp_set):
-            lens = [len(w) for s in subcorp.sentences() for w in s]
-            all_lens.extend(lens)
-        
-        i = 0
-        plt.hist(all_lens, bins=100, color=colour, histtype="step",
-                     label=(name if i == 0 else None))
-        
-        print(name)
+    main(subcorp_sets, names)
     
-    plt.title("Word Lengths")
-    plt.legend()
-    plt.show()
-            
-            
