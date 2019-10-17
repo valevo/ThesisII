@@ -21,7 +21,7 @@ cd "$TMPDIR"/ThesisII
 
 echo
 
-lang=TR
+lang=VI
 echo
 echo "language: $lang"
 
@@ -31,7 +31,7 @@ cp -r $HOME/ThesisII/data/reader.py "$TMPDIR"/ThesisII/data/
 cp -r $HOME/ThesisII/data/corpus.py "$TMPDIR"/ThesisII/data/
 
 # seq 3 3 27
-start=6
+start=22
 end=26
 stepsize=4
 
