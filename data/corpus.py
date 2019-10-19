@@ -35,7 +35,7 @@ class Articles(Corpus):
     def subsample(cls, corpus_list, n_tokens):
         def sample(articles, n_tokens):
             n_sampled = 0
-            used = {}
+            used = set()
             
             while n_sampled < n_tokens:
                 cur_ind = rand.randint(len(articles))
@@ -88,7 +88,7 @@ class Sentences(Corpus):
     def subsample(cls, corpus_list, n_tokens):
         def sample(sents, n_tokens):
             n_sampled = 0
-            used = {}
+            used = set()
             
             while n_sampled < n_tokens:
                 cur_ind = rand.randint(len(sents))
@@ -115,7 +115,7 @@ class Words(Corpus):
     def subsample(cls, corpus_list, n_tokens):
         def sample(words, n_tokens):
             n_sampled = 0
-            used = {}
+            used = set()
             
             while n_sampled < n_tokens:
                 cur_ind = rand.randint(len(words))
