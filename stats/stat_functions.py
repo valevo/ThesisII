@@ -21,7 +21,9 @@ def merge_to_joint(ranks, freqs):
     return {w : (ranks[w], freqs[w]) for w in common_types}
 
 def pool_zipf(stat_ls):
-    common_types = set.intersection(*stat_ls)
+    common_types = set.intersection(
+            *[set(stat_d.keys()) for stat_d in stat_ls]
+            )
     return {w: [stat_d[w] for stat_d in stat_ls] for w in common_types}    
 
 

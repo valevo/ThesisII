@@ -5,6 +5,7 @@ from data.corpus import Sentences
 
 from evaluation.lex_diversity import main as lex_main
 from evaluation.len_dists import main as len_main
+from evaluation.heap import heap_main
 
 
 
@@ -44,3 +45,7 @@ if __name__ == "__main__":
     ## LEX DIV MEASURES
     lex_main(subcorp_sets, names)
     
+    
+    ## HEAP 
+    
+    heap_main(subcorp_sets, names)
