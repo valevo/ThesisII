@@ -7,22 +7,34 @@ from jackknife.variance import variance_main
 from jackknife.convergence import convergence_main
 from jackknife.heap import heap_main
 
+
+import argparse
+
+def parse_args():
+    p = argparse.ArgumentParser()
+    
+    p.add_argument("--lang", type=str)
+    
+    args = p.parse_args()
+    return args.lang
+
+
 if __name__ == "__main__":
-    wiki = list(wiki_from_pickles("data/ALS_pkl"))
+    lang = parse_args()
+    d = "results/" + lang + "/jackknife/"
+    wiki = list(wiki_from_pickles("data/" + lang + "_pkl"))    
     
     # max data size / 2
-    big_n = int(3e6)
-    small_n = int(5e5)
+    big_n = int(25e6)
+    small_n = int(1e6)
     n = int(1e6)
     
-    rng1 = list(range(int(5e5), int(2.5e6)+1, int(5e5)))
+    sampling_levels_main(wiki, big_n, save_dir=d)
     
-    sampling_levels_main(wiki, big_n)
+    variance_main(wiki, n, small_n, big_n, save_dir=d)
+
+    rng_conv = list(range(int(5e5), int(2.5e6)+1, int(5e5))) + [big_n]
+    convergence_main(wiki, rng_conv, save_dir=d)
     
-    variance_main(wiki, n, big_n, small_n)
-    
-    convergence_main(wiki, rng1)
-    
-    rng2 = list(range(int(0), int(1e5)+1, int(2e3)))
-    
-    heap_main(wiki, rng2)
+    rng_vocab = list(range(int(0), n*2+1, (n*2)//1000))
+    heap_main(wiki, rng_vocab, save_dir=d)

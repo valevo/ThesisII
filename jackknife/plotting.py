@@ -46,7 +46,6 @@ def hexbin_plot(xs, ys, xlbl=None, ylbl=None, log=True,
     if log:
         params.update(dict(bins="log", xscale="log", yscale="log"))
     else:
-        print("scientific notation")
         plt.ticklabel_format(style="sci", axis="both", 
                              scilimits=(0, 0))
     params.update(plt_args)    

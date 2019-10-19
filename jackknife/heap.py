@@ -13,6 +13,7 @@ import numpy.random as rand
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+import pickle
         
 def heap(corp, rng):
     vocab_sizes = []
@@ -26,14 +27,12 @@ def heap(corp, rng):
     return vocab_sizes
         
         
-def heap_main(wiki, rng):
+def heap_main(wiki, rng, save_dir="./"):
     m = 20
     long_rng = np.tile(rng, m)
     vocab_sizes = [heap(wiki, rng) for _ in range(m)]
     all_sizes = [v_n for size_ls in vocab_sizes for v_n in size_ls]
-    
-    print(len(long_rng), len(all_sizes))
-    
+        
     hexbin_plot(long_rng, all_sizes, xlbl="$n$", ylbl="$V(n)$",
                 log=False, ignore_zeros=False, label="pooled")
     
@@ -42,7 +41,14 @@ def heap_main(wiki, rng):
                 color="red", edgecolors="red", cmap="Reds_r", cbar=False)
     
     plt.legend()
-    plt.show()
+    plt.savefig(save_dir + "vocab_growth_" + 
+                str(min(rng)) + "_" + str(max(rng)) + "_" + str(len(rng)) + ".png",
+                dpi=300)
+    
+    with open(save_dir + "vocab_growth_" + 
+              str(min(rng)) + "_" + str(max(rng)) + "_" + str(len(rng)) + 
+              ".pkl", "wb") as handle:
+        pickle.dump(vocab_sizes, handle)
     
     
 

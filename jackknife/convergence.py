@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-def convergence_main(wiki, rng):
+def convergence_main(wiki, rng, save_dir="./"):
     col_pal = sns.color_palette("bright") # "dark", "deep", "colorblind"
     for i, n in enumerate(rng):
         sub_i1 = Sentences.subsample(wiki, n)
@@ -27,8 +27,10 @@ def convergence_main(wiki, rng):
                     cbar=(True if i==0 else False))
     
     plt.legend()
-    plt.show()    
-
+    plt.savefig(save_dir + "convergence_" + "_".join(map(str, rng)) + ".png",
+                dpi=300)
+    
+    
     for i, n in enumerate(rng):
         sub_i1 = Sentences.subsample(wiki, n)
         sub_i2 = Sentences.subsample(wiki, n)
@@ -43,8 +45,8 @@ def convergence_main(wiki, rng):
                     cbar=(True if i==0 else False))
     
     plt.legend()
-    plt.show()
-
+    plt.savefig(save_dir + "convergence_probs_" + "_".join(map(str, rng)) + ".png",
+                dpi=300)
 
 
 

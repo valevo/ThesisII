@@ -10,7 +10,7 @@ from jackknife.plotting import hexbin_plot
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-def variance_within_size(wiki, n):
+def variance_within_size(wiki, n, save_dir):
     subsamples = [(Sentences.subsample(wiki, n), 
                    Sentences.subsample(wiki, n)) for _ in range(20)]
     
@@ -39,10 +39,10 @@ def variance_within_size(wiki, n):
     hexbin_plot(xs, ys, xlbl="$\log~r(w)$", ylbl="$\log~f(w)$",
                 label="single")
     plt.legend()
-    plt.show()
+    plt.savefig(save_dir + "variance_within_size_" + str(n) + ".png",
+                dpi=300)
 
-
-def variance_across_size(wiki, n1, n2):
+def variance_across_size(wiki, n1, n2, save_dir):
     subsamples_small = [(Sentences.subsample(wiki, n1), 
                    Sentences.subsample(wiki, n1)) for _ in range(20)]
     
@@ -81,12 +81,12 @@ def variance_across_size(wiki, n1, n2):
     
     
     plt.legend()
-    plt.show()
+    plt.savefig(save_dir + "variance_across_size_" + str(n1) + "_" + str(n2) + ".png",
+                dpi=300)    
     
-    
-def variance_main(wiki, n, big_n, small_n):
-    variance_within_size(wiki, n)
-    variance_across_size(wiki, small_n, big_n)
+def variance_main(wiki, n, small_n, big_n, save_dir="./"):
+    variance_within_size(wiki, n, save_dir)
+    variance_across_size(wiki, small_n, big_n, save_dir)
     
 
 if __name__ == "__main__":
@@ -99,7 +99,5 @@ if __name__ == "__main__":
 
 
     variance_main(wiki, n)
-    
-    variance_across(wiki, n1, n2)
 
     
