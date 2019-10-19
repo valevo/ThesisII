@@ -15,6 +15,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import argparse
+import pickle
 
 def heap(corp, rng):
     vocab_sizes = []
@@ -73,7 +74,7 @@ if __name__ == "__main__":
     
     
     
-    start, end, step = 0, int(3e6), int(3e6)//50
+    start, end, step = 0, n+1, n//50
     rng = list(range(start, end, step))
     v_ns = heap(wiki, rng)
     
@@ -84,10 +85,16 @@ if __name__ == "__main__":
                                     method="powell", full_output=True)    
     heap.register_fit(heap_fit)
     heap.print_result()
+    
+    plot_preds(heap, np.asarray(rng))
+    
     with open(d + "mle_heap_" + str(n) + ".txt", "w") as handle:
         handle.write(heap.print_result(string=True))
     
-    plot_preds(heap, np.asarray(rng))
+    with open(d + "vocab_growth_" + str(start) + "_" + 
+                str(end) + "_" + str(step) + ".pkl", "wb") as handle:
+        pickle.dump(v_ns, handle)
+    
     plt.savefig(d + "vocab_growth_" + str(start) + "_" + 
                 str(end) + "_" + str(step) + ".png",
                 dpi=300)
