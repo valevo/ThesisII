@@ -74,7 +74,7 @@ if __name__ == "__main__":
     
     
     
-    start, end, step = 0, n+1, n//1000
+    start, end, step = 0, n+1, n//2000
     rng = list(range(start, end, step))
     v_ns = heap(wiki, rng)
     
