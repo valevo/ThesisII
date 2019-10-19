@@ -20,7 +20,7 @@ import pickle
 def heap(corp, rng):
     vocab_sizes = []
     for i, ntoks in enumerate(rng):
-        if i % 10 == 0:
+        if i % 100 == 0:
             print(i, ntoks)
         subsample = Sentences.subsample(corp, ntoks)
         vocab_size = compute_vocab_size(subsample)
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     
     
     
-    start, end, step = 0, n+1, n//50
+    start, end, step = 0, n+1, n//1000
     rng = list(range(start, end, step))
     v_ns = heap(wiki, rng)
     
