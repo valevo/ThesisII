@@ -10,11 +10,12 @@ echo "data_main job $PBS_JOBID started at `date`"
 
 rsync -a $HOME/ThesisII "$TMPDIR"/ --exclude data --exclude .git
 
+cd "$TMPDIR"/ThesisII
+
 mkdir data
 cp -r $HOME/ThesisII/data/reader.py "$TMPDIR"/ThesisII/data/
 cp -r $HOME/ThesisII/data/corpus.py "$TMPDIR"/ThesisII/data/
 
-cd "$TMPDIR"/ThesisII
 
 for lang in EO FI ID KO NO TR VI; do
     echo "language: $lang"

@@ -30,11 +30,15 @@ if __name__ == "__main__":
     n = int(1e6)
     
     sampling_levels_main(wiki, big_n, save_dir=d)
+    print("sampling levels done")
     
     variance_main(wiki, n, small_n, big_n, save_dir=d)
+    print("variance done")
 
     rng_conv = list(range(int(5e5), int(2.5e6)+1, int(5e5))) + [big_n]
     convergence_main(wiki, rng_conv, save_dir=d)
+    print("convergence done")
     
     rng_vocab = list(range(int(0), n*2+1, (n*2)//1000))
     heap_main(wiki, rng_vocab, save_dir=d)
+    print("heap done")

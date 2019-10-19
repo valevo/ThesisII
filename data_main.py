@@ -63,6 +63,7 @@ if __name__ == "__main__":
     plt.savefig(d + "rank_freq_" + str(n) + ".png",
             dpi=300)
     
+    print("rank-freq relationship done")
     
     
     freq_of_freqs = Counter(freqs.values())
@@ -71,6 +72,8 @@ if __name__ == "__main__":
     hexbin_plot(xs, ys, xlbl="$\log f$", ylbl="$\log f(f)$")
     plt.savefig(d + "freq_freqs_" + str(n) + ".png",
             dpi=300)
+    
+    print("freq-freq relationship done")
     
     
     
@@ -100,6 +103,7 @@ if __name__ == "__main__":
                 dpi=300)
         
     
+    print("heap done")
     
     
     
