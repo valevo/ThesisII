@@ -29,6 +29,7 @@ def convergence_main(wiki, rng, save_dir="./"):
     plt.legend()
     plt.savefig(save_dir + "convergence_" + "_".join(map(str, rng)) + ".png",
                 dpi=300)
+    plt.close()
     
     
     for i, n in enumerate(rng):
@@ -47,7 +48,7 @@ def convergence_main(wiki, rng, save_dir="./"):
     plt.legend()
     plt.savefig(save_dir + "convergence_probs_" + "_".join(map(str, rng)) + ".png",
                 dpi=300)
-
+    plt.close()
 
 
 if __name__ == "__main__":

@@ -44,6 +44,7 @@ def heap_main(wiki, rng, save_dir="./"):
     plt.savefig(save_dir + "vocab_growth_" + 
                 str(min(rng)) + "_" + str(max(rng)) + "_" + str(len(rng)) + ".png",
                 dpi=300)
+    plt.close()
     
     with open(save_dir + "vocab_growth_" + 
               str(min(rng)) + "_" + str(max(rng)) + "_" + str(len(rng)) + 

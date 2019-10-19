@@ -62,6 +62,7 @@ if __name__ == "__main__":
     plot_preds(mandelbrot, np.asarray(xs))
     plt.savefig(d + "rank_freq_" + str(n) + ".png",
             dpi=300)
+    plt.close()
     
     print("rank-freq relationship done")
     
@@ -72,6 +73,7 @@ if __name__ == "__main__":
     hexbin_plot(xs, ys, xlbl="$\log f$", ylbl="$\log f(f)$")
     plt.savefig(d + "freq_freqs_" + str(n) + ".png",
             dpi=300)
+    plt.close()
     
     print("freq-freq relationship done")
     
@@ -101,7 +103,7 @@ if __name__ == "__main__":
     plt.savefig(d + "vocab_growth_" + str(start) + "_" + 
                 str(end) + "_" + str(step) + ".png",
                 dpi=300)
-        
+    plt.close()
     
     print("heap done")
     

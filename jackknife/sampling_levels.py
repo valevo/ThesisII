@@ -52,6 +52,7 @@ def sampling_levels_main(wiki, n, save_dir="./"):
     plt.legend()
     plt.savefig(save_dir + "rank_freq_word_vs_article_" + str(n) + ".png",
                 dpi=300)
+    plt.plot()
 
     freq_joint = merge_to_joint(art_freqs, word_freqs)
     xs, ys = list(zip(*sorted(freq_joint.values())))
@@ -63,6 +64,7 @@ def sampling_levels_main(wiki, n, save_dir="./"):
                 label="articles")    
     plt.savefig(save_dir + "freq_correl_word_vs_article_" + str(n) + ".png",
                 dpi=300)
+    plt.close()
 
 if __name__ == "__main__":
     d = "results/ALS/"

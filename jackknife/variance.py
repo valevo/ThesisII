@@ -41,6 +41,7 @@ def variance_within_size(wiki, n, save_dir):
     plt.legend()
     plt.savefig(save_dir + "variance_within_size_" + str(n) + ".png",
                 dpi=300)
+    plt.close()
 
 def variance_across_size(wiki, n1, n2, save_dir):
     subsamples_small = [(Sentences.subsample(wiki, n1), 
@@ -59,7 +60,6 @@ def variance_across_size(wiki, n1, n2, save_dir):
     hexbin_plot(xs, ys, xlbl="$\log r(w)$", ylbl="$\log P(w)$",
                 color="blue", edgecolors="blue", cmap="Blues_r",
                 cbar=False, label="pooled " + str(n1))
-    
     
     
     subsamples_big = [(Sentences.subsample(wiki, n2), 
@@ -82,7 +82,8 @@ def variance_across_size(wiki, n1, n2, save_dir):
     
     plt.legend()
     plt.savefig(save_dir + "variance_across_size_" + str(n1) + "_" + str(n2) + ".png",
-                dpi=300)    
+                dpi=300)
+    plt.close()
     
 def variance_main(wiki, n, small_n, big_n, save_dir="./"):
     variance_within_size(wiki, n, save_dir)
@@ -96,8 +97,7 @@ if __name__ == "__main__":
     n2 = int(3e6)
     
     wiki = list(wiki_from_pickles("data/ALS_pkl"))
-
-
+    
     variance_main(wiki, n)
 
     
