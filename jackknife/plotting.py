@@ -25,7 +25,7 @@ def get_lims(xs, ys, log=False, equal_aspect=False):
 
 
 def remove_zeros(x_vals, y_vals):
-    return list(zip(*[(x, y) fqor x, y in zip(x_vals, y_vals) 
+    return list(zip(*[(x, y) for x, y in zip(x_vals, y_vals) 
                       if x > 0 and y > 0]))
 
 
