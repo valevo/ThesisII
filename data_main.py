@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 
 import argparse
 import pickle
+import os
 
 def heap(corp, rng):
     vocab_sizes = []
@@ -27,6 +28,16 @@ def heap(corp, rng):
         vocab_sizes.append(vocab_size)
         
     return vocab_sizes
+
+def heap_from_file(save_dir, rng):
+    rng_params = min(rng), max(rng), len(rng)
+    required_file_name = "vocab_growth_" + "_".join(rng_params) + ".pkl"
+    if required_file_name in os.listdir(save_dir):
+        with open(save_dir + required_file_name, "rb") as handle:
+            return pickle.load(handle)
+    else:
+        raise FileNotFoundError
+
 
 def parse_args():
     p = argparse.ArgumentParser()
@@ -40,7 +51,7 @@ if __name__ == "__main__":
     lang = parse_args()
     d = "results/" + lang + "/plots/"
     wiki = list(wiki_from_pickles("data/" + lang + "_pkl"))
-    n = int(1e6) # int(25e6)
+    n = int(25e6)
     
     subsample1 = Sentences.subsample(wiki, n)
     subsample2 = Sentences.subsample(wiki, n)
@@ -50,7 +61,7 @@ if __name__ == "__main__":
     joints = merge_to_joint(ranks, freqs)
     xs, ys = list(zip(*sorted(joints.values())))
     
-    hexbin_plot(xs, ys, xlbl="$\log~r(w)$", ylbl="$\log~f(w)$")
+    hexbin_plot(xs, ys, xlbl="$\log$ $r(w)$", ylbl="$\log$ $f(w)$")
     
     mandelbrot = Mandelbrot(ys, xs)
     mandelbrot_fit = mandelbrot.fit(start_params=np.asarray([1.0, 1.0]), 
@@ -70,7 +81,7 @@ if __name__ == "__main__":
     freq_of_freqs = Counter(freqs.values())
     xs, ys = list(zip(*freq_of_freqs.items()))
     
-    hexbin_plot(xs, ys, xlbl="$\log f$", ylbl="$\log f(f)$")
+    hexbin_plot(xs, ys, xlbl="$\log$ $f$", ylbl="$\log$ $f(f)$")
     plt.savefig(d + "freq_freqs_" + str(n) + ".png",
             dpi=300)
     plt.close()
@@ -81,7 +92,10 @@ if __name__ == "__main__":
     
     start, end, step = 0, n+1, n//2000
     rng = list(range(start, end, step))
-    v_ns = heap(wiki, rng)
+    try:
+        v_ns = heap_from_file(d, rng)
+    except FileNotFoundError:
+        v_ns = heap(wiki, rng)
     
     hexbin_plot(rng, v_ns, xlbl="$n$", ylbl="$V(n)$", log=False, gridsize=50)
     
@@ -97,11 +111,11 @@ if __name__ == "__main__":
         handle.write(heap.print_result(string=True))
     
     with open(d + "vocab_growth_" + str(start) + "_" + 
-                str(end) + "_" + str(step) + ".pkl", "wb") as handle:
+                str(end) + "_" + str(len(rng)) + ".pkl", "wb") as handle:
         pickle.dump(v_ns, handle)
     
     plt.savefig(d + "vocab_growth_" + str(start) + "_" + 
-                str(end) + "_" + str(step) + ".png",
+                str(end) + "_" + str(len(rng)) + ".png",
                 dpi=300)
     plt.close()
     

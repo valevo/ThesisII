@@ -58,7 +58,7 @@ def variance_across_size(wiki, n1, n2, save_dir):
     
     xs, ys = list(zip(*r_f_pairs))
     
-    hexbin_plot(xs, ys, xlbl=r"$\log~r(w)$", ylbl=r"$\log~P(w)$", 
+    hexbin_plot(xs, ys, xlbl=r"$\log$ $r(w)$", ylbl=r"$\log$ $P(w)$", 
                 label="pooled " + str(n1))
     
     
@@ -75,7 +75,7 @@ def variance_across_size(wiki, n1, n2, save_dir):
     
     xs, ys = list(zip(*r_f_pairs))
     
-    hexbin_plot(xs, ys, xlbl=r"$\log~r(w)$", ylbl=r"$\log~P(w)$",
+    hexbin_plot(xs, ys, xlbl=r"$\log$ $r(w)$", ylbl=r"$\log$ $P(w)$",
                 color="red", edgecolors="red", cmap="Reds_r",
                 cbar=False, label="pooled " + str(n2))
     

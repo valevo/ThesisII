@@ -218,7 +218,7 @@ class Heap(GenericLikelihoodModel):
             ns_tokens[0] = 1
         
         self.ttrs = ns_types/ns_tokens
-        self.log_ttrs = lg(ns_types)/lg(ns_tokens) if ns_tokens > 1 else 0
+#        self.log_ttrs = lg(ns_types)/lg(ns_tokens)
         
         super().__init__(endog=ns_types, exog=ns_tokens, **kwargs)
         self.fit_result = None

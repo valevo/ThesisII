@@ -39,6 +39,6 @@ if __name__ == "__main__":
     convergence_main(wiki, rng_conv, save_dir=d)
     print("convergence done")
     
-    rng_vocab = list(range(int(0), n*2+1, (n*2)//1000))
+    rng_vocab = list(range(int(0), n*2+1, (n*2)//2000))
     heap_main(wiki, rng_vocab, save_dir=d)
     print("heap done")

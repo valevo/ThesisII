@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 import pickle
+import os
         
 def heap(corp, rng):
     vocab_sizes = []
@@ -25,14 +26,27 @@ def heap(corp, rng):
         vocab_sizes.append(vocab_size)
         
     return vocab_sizes
-        
+
+def heap_from_file(save_dir, rng):
+    rng_params = min(rng), max(rng), len(rng)
+    required_file_name = "vocab_growth_" + "_".join(rng_params) + ".pkl"
+    if required_file_name in os.listdir(save_dir):
+        with open(save_dir + required_file_name, "rb") as handle:
+            return pickle.load(handle)
+    else:
+        raise FileNotFoundError
         
 def heap_main(wiki, rng, save_dir="./"):
-    m = 20
-    long_rng = np.tile(rng, m)
-    vocab_sizes = [heap(wiki, rng) for _ in range(m)]
+    m = 20    
+    
+    try:
+        vocab_sizes = heap_from_file(save_dir, rng)
+    except FileNotFoundError:
+        vocab_sizes = [heap(wiki, rng) for _ in range(m)]
+    
     all_sizes = [v_n for size_ls in vocab_sizes for v_n in size_ls]
         
+    long_rng = np.tile(rng, m)    
     hexbin_plot(long_rng, all_sizes, xlbl="$n$", ylbl="$V(n)$",
                 log=False, ignore_zeros=False, label="pooled")
     
