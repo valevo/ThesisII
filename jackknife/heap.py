@@ -40,7 +40,7 @@ def heap_main(wiki, rng, save_dir="./"):
                 log=False, ignore_zeros=False, label="single",
                 color="red", edgecolors="red", cmap="Reds_r", cbar=False)
     
-    plt.legend()
+    plt.legend(loc="upper left")
     plt.savefig(save_dir + "vocab_growth_" + 
                 str(min(rng)) + "_" + str(max(rng)) + "_" + str(len(rng)) + ".png",
                 dpi=300)

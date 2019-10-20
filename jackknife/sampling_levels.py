@@ -26,7 +26,7 @@ def sampling_levels_main(wiki, n, save_dir="./"):
     art_joint = merge_to_joint(art_ranks, art_freqs)
     xs, ys = list(zip(*sorted(art_joint.values())))
     
-    hexbin_plot(xs, ys, xlbl="$\log~r(w)$", ylbl="$\log~f(w)$",
+    hexbin_plot(xs, ys, xlbl=r"$\log~r(w)$", ylbl=r"$\log~f(w)$",
                 label="articles")
 
     
@@ -45,21 +45,21 @@ def sampling_levels_main(wiki, n, save_dir="./"):
     word_joint = merge_to_joint(word_ranks, word_freqs)
     xs, ys = list(zip(*sorted(word_joint.values())))
     
-    hexbin_plot(xs, ys, xlbl="$\log~r(w)$", ylbl="$\log~f(w)$", 
+    hexbin_plot(xs, ys, xlbl=r"$\log~r(w)$", ylbl=r"$\log~f(w)$", 
                 color="red", edgecolors="red", cmap="Reds_r",
                 label="words", cbar=False)
     
     plt.legend()
     plt.savefig(save_dir + "rank_freq_word_vs_article_" + str(n) + ".png",
                 dpi=300)
-    plt.plot()
+    plt.close()
 
     freq_joint = merge_to_joint(art_freqs, word_freqs)
     xs, ys = list(zip(*sorted(freq_joint.values())))
     
     hexbin_plot(xs, ys, 
-                xlbl="$\log~f(w)$ from articles", 
-                ylbl="$\log~f(w)$ from words",
+                xlbl=r"$\log~ f(w)$ from articles", 
+                ylbl=r"$\log~ f(w)$ from words",
                 edgecolors="blue", cmap="Blues_r", linewidths=0.2,
                 label="articles")    
     plt.savefig(save_dir + "freq_correl_word_vs_article_" + str(n) + ".png",

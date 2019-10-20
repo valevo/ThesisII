@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -N 1
-#SBATCH -t 5:00:00
+#SBATCH -t 30:00:00
 #SBATCH --mem=70G
 
 module load pre2019

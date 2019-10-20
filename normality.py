@@ -47,5 +47,4 @@ if __name__ == "__main__":
     
     
     ## HEAP 
-    
     heap_main(subcorp_sets, names)

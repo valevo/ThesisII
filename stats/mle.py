@@ -218,7 +218,7 @@ class Heap(GenericLikelihoodModel):
             ns_tokens[0] = 1
         
         self.ttrs = ns_types/ns_tokens
-        self.log_ttrs = lg(ns_types)/lg(ns_tokens)
+        self.log_ttrs = lg(ns_types)/lg(ns_tokens) if ns_tokens > 1 else 0
         
         super().__init__(endog=ns_types, exog=ns_tokens, **kwargs)
         self.fit_result = None
@@ -242,7 +242,7 @@ class Heap(GenericLikelihoodModel):
         logprobs = list(binom.logpmf(t, bn, p)[0] 
                     for t, bn in zip(types, binom_ns))        
         logprobs_clipped = np.clip(logprobs, -10**6, 0)
-        return sum(logprobs_clipped)
+        return sum(logprobs_clipped) + beta
 
     def null_loglike(self):
         types, tokens = self.endog, self.exog

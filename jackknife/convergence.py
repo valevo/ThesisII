@@ -21,7 +21,7 @@ def convergence_main(wiki, rng, save_dir="./"):
            
         xs, ys = list(zip(*joint_i.values()))
 
-        hexbin_plot(xs, ys, xlbl="$\log~r(w)$", ylbl="$\log~f(w)$",
+        hexbin_plot(xs, ys, xlbl=r"$\log~r(w)$", ylbl=r"$\log~f(w)$",
                     edgecolors=col_pal[i], color=col_pal[i],
                     label=str(n), alpha=1/(i+1)**.3, linewidths=1.0,
                     cbar=(True if i==0 else False))
@@ -40,7 +40,7 @@ def convergence_main(wiki, rng, save_dir="./"):
            
         xs, ys = list(zip(*joint_i.values()))
                         
-        hexbin_plot(xs, ys, xlbl="$\log~r(w)$", ylbl="$\log~P(w)$",
+        hexbin_plot(xs, ys, xlbl=r"$\log~r(w)$", ylbl=r"$\log~P(w)$",
                     edgecolors=col_pal[i], color=col_pal[i],
                     label=str(n), alpha=1/(i+1)**.3, linewidths=1.0,
                     cbar=(True if i==0 else False))

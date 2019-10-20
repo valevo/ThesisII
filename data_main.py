@@ -40,12 +40,12 @@ if __name__ == "__main__":
     lang = parse_args()
     d = "results/" + lang + "/plots/"
     wiki = list(wiki_from_pickles("data/" + lang + "_pkl"))
-    n = int(25e6)
+    n = int(1e6) # int(25e6)
     
     subsample1 = Sentences.subsample(wiki, n)
     subsample2 = Sentences.subsample(wiki, n)
     
-    
+    print("samples done")
     ranks, freqs = compute_ranks(subsample1), compute_freqs(subsample2)
     joints = merge_to_joint(ranks, freqs)
     xs, ys = list(zip(*sorted(joints.values())))
