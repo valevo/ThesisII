@@ -28,7 +28,7 @@ def heap(corp, rng):
     return vocab_sizes
 
 def heap_from_file(save_dir, rng):
-    rng_params = min(rng), max(rng), len(rng)
+    rng_params = map(str, (min(rng), max(rng), len(rng)))
     required_file_name = "vocab_growth_" + "_".join(rng_params) + ".pkl"
     if required_file_name in os.listdir(save_dir):
         with open(save_dir + required_file_name, "rb") as handle:
