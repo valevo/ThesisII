@@ -19,7 +19,8 @@ def sent_len_dists(subcorp_sets, names):
         
         i = rand.randint(len(subcorp_set))
         
-        all_lens = [len(s) for s in subcorp_set[i].sentences()]# if len(s) < 50]
+        all_lens = [len(s) for s in subcorp_set[i].sentences() if len(s) < 40
+                    and len(s) > 0]
         all_xs.extend(all_lens)
         
         lbls = [name]*len(all_lens)
@@ -42,7 +43,8 @@ def word_len_dists(subcorp_sets, names):
         
         i = rand.randint(len(subcorp_set))
         
-        all_lens = [len(w) for w in subcorp_set[i].tokens()]# if len(w) < 20]
+        all_lens = [len(w) for w in subcorp_set[i].tokens() 
+            if len(w) < 20 and len(w) > 0]
         all_xs.extend(all_lens)
         
         lbls = [name]*len(all_lens)

@@ -35,12 +35,6 @@ def heap(corp, rng):
         
     return vocab_sizes
 
-
-
-xlbl, ylbl = "$n$", "$|V(n)|$"
-params = dict(edgecolors="blue", linewidths=0.2, cmap="Blues_r")
-
-def heap_plot(vocab_sizes, names):
     
 
 def heap_main(subcorp_sets, names):

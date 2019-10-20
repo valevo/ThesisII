@@ -5,7 +5,7 @@ from data.corpus import Sentences
 
 from evaluation.lex_diversity import main as lex_main
 from evaluation.len_dists import main as len_main
-from evaluation.heap import heap_main
+#from evaluation.heap import heap_main
 
 
 
@@ -33,7 +33,6 @@ if __name__ == "__main__":
     uni_samples = corpora_from_pickles(d + "UNI", names=["n", "i"])
     uni = [Sentences(c) for name_d, c in uni_samples if name_d["n"] == n]
     
-    
     subcorp_sets = [srf_10, srf_20, srf_30, tf_50, tf_100, uni]
     names = ["SRF10", "SRF20", "SRF30", "TF50", "TF100", "UNI"]
     
@@ -47,4 +46,4 @@ if __name__ == "__main__":
     
     
     ## HEAP 
-    heap_main(subcorp_sets, names)
+#    heap_main(subcorp_sets, names)
