@@ -5,14 +5,19 @@ from data.corpus import Words, Articles, Sentences
 from stats.stat_functions import compute_ranks, compute_freqs,\
                 compute_normalised_freqs, merge_to_joint, pool_zipf
 
-from jackknife.plotting import hexbin_plot
+from jackknife.plotting import hexbin_plot, colour_palette
 
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+def format_scientific(n):
+    formatted_s = "%.1e" % n
+    formatted_s = formatted_s.replace("+0", "")
+    formatted_s = formatted_s.replace("+", "")
+    return formatted_s
+
 
 def convergence_main(wiki, rng, save_dir="./"):
-    col_pal = sns.color_palette("bright") # "dark", "deep", "colorblind"
     for i, n in enumerate(rng):
         sub_i1 = Sentences.subsample(wiki, n)
         sub_i2 = Sentences.subsample(wiki, n)
@@ -22,8 +27,9 @@ def convergence_main(wiki, rng, save_dir="./"):
         xs, ys = list(zip(*joint_i.values()))
 
         hexbin_plot(xs, ys, xlbl=r"$\log$ $r(w)$", ylbl=r"$\log$ $f(w)$",
-                    edgecolors=col_pal[i], color=col_pal[i],
-                    label=str(n), alpha=1/(i+1)**.3, linewidths=1.0,
+                    edgecolors=colour_palette[i], color=colour_palette[i],
+                    label=format_scientific(n), 
+                    alpha=1/(i+1)**.3, linewidths=1.0,
                     cbar=(True if i==0 else False))
     
     plt.legend()
@@ -41,7 +47,7 @@ def convergence_main(wiki, rng, save_dir="./"):
         xs, ys = list(zip(*joint_i.values()))
                         
         hexbin_plot(xs, ys, xlbl=r"$\log$ $r(w)$", ylbl=r"$\log$ $P(w)$",
-                    edgecolors=col_pal[i], color=col_pal[i],
+                    edgecolors=colour_palette[i], color=colour_palette[i],
                     label=str(n), alpha=1/(i+1)**.3, linewidths=1.0,
                     cbar=(True if i==0 else False))
     

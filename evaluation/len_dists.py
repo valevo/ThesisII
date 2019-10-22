@@ -3,12 +3,15 @@
 from data.reader import corpora_from_pickles
 from data.corpus import Sentences
 
+from jackknife.plotting import colour_palette
 
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 import numpy as np
 import numpy.random as rand
+
+sns.set_palette(colour_palette)
 
 
 def sent_len_dists(subcorp_sets, names):
@@ -30,7 +33,7 @@ def sent_len_dists(subcorp_sets, names):
     
     print(means_stddevs)
     sns.violinplot(x=all_xs, y=all_ys, cut=0)
-    plt.title("Sent Lens")
+    plt.xlabel("Sentence Length")
     plt.show()    
     return means_stddevs
     
@@ -54,7 +57,7 @@ def word_len_dists(subcorp_sets, names):
     
     print(means_stddevs)
     sns.violinplot(x=all_xs, y=all_ys, cut=0)
-    plt.title("Word Lens")
+    plt.xlabel("Word Length")
     plt.show()    
     return means_stddevs
 

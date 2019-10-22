@@ -10,6 +10,13 @@ from jackknife.plotting import hexbin_plot
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+
+def format_scientific(n):
+    formatted_s = "%.1e" % n
+    formatted_s = formatted_s.replace("+0", "")
+    formatted_s = formatted_s.replace("+", "")
+    return formatted_s
+
 def variance_within_size(wiki, n, save_dir):
     subsamples = [(Sentences.subsample(wiki, n), 
                    Sentences.subsample(wiki, n)) for _ in range(20)]
@@ -24,7 +31,7 @@ def variance_within_size(wiki, n, save_dir):
     
     xs, ys = list(zip(*r_f_pairs))
     
-    hexbin_plot(xs, ys, xlbl=r"$\log~r(w)$", ylbl=r"$\log~f(w)$", 
+    hexbin_plot(xs, ys, xlbl=r"$\log$ $r(w)$", ylbl=r"$\log$ $f(w)$", 
                 label="pooled")
     
     
@@ -36,7 +43,7 @@ def variance_within_size(wiki, n, save_dir):
     
     xs, ys = list(zip(*joint_single.values()))
     
-    hexbin_plot(xs, ys, xlbl=r"$\log~r(w)$", ylbl=r"$\log~f(w)$",
+    hexbin_plot(xs, ys, xlbl=r"$\log$ $r(w)$", ylbl=r"$\log$ $f(w)$",
                 color="red", edgecolors="red", cmap="Reds_r", cbar=False,
                 label="single")
     plt.legend()
@@ -59,7 +66,7 @@ def variance_across_size(wiki, n1, n2, save_dir):
     xs, ys = list(zip(*r_f_pairs))
     
     hexbin_plot(xs, ys, xlbl=r"$\log$ $r(w)$", ylbl=r"$\log$ $P(w)$", 
-                label="pooled " + str(n1))
+                label="pooled " + format_scientific(n1))
     
     
     subsamples_big = [(Sentences.subsample(wiki, n2), 
@@ -77,7 +84,7 @@ def variance_across_size(wiki, n1, n2, save_dir):
     
     hexbin_plot(xs, ys, xlbl=r"$\log$ $r(w)$", ylbl=r"$\log$ $P(w)$",
                 color="red", edgecolors="red", cmap="Reds_r",
-                cbar=False, label="pooled " + str(n2))
+                cbar=False, label="pooled " + format_scientific(n2))
     
     
     plt.legend()

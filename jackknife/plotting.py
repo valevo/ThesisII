@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
+colour_palette = sns.color_palette("bright") # "dark", "deep", "colorblind"
+
+
 def get_lims(xs, ys, log=False, equal_aspect=False):
     lows = min(xs), min(ys)
     highs = max(xs), max(ys)

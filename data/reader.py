@@ -26,6 +26,9 @@ def corpus_to_pickle(corpus, pkl_dir, pkl_name):
 def corpora_from_pickles(pkls_dir, names):
     files = os.listdir(pkls_dir)
     
+    if not files:
+        raise FileNotFoundError("DIRECTORY " + pkls_dir + " is empty!")
+    
     for f in files:
         with open(pkls_dir + "/" + f, "rb") as handle:
             param_vals = list(map(lambda x: int(float(x)), 

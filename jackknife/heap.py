@@ -27,20 +27,23 @@ def heap(corp, rng):
         
     return vocab_sizes
 
-def heap_from_file(save_dir, rng):
-    rng_params = map(str, (min(rng), max(rng), len(rng)))
+def heap_from_file(save_dir, rng_params):
+    rng_params = map(str, rng_params)
     required_file_name = "vocab_growth_" + "_".join(rng_params) + ".pkl"
+    print(required_file_name)
     if required_file_name in os.listdir(save_dir):
         with open(save_dir + required_file_name, "rb") as handle:
             return pickle.load(handle)
     else:
         raise FileNotFoundError
         
-def heap_main(wiki, rng, save_dir="./"):
+def heap_main(wiki, rng_params, save_dir="./"):
     m = 20    
+    rng = list(range(*rng_params))
     
     try:
-        vocab_sizes = heap_from_file(save_dir, rng)
+        vocab_sizes = heap_from_file(save_dir, 
+                                     (rng_params[0], rng_params[1], len(rng)))
     except FileNotFoundError:
         vocab_sizes = [heap(wiki, rng) for _ in range(m)]
     
@@ -48,11 +51,13 @@ def heap_main(wiki, rng, save_dir="./"):
         
     long_rng = np.tile(rng, m)    
     hexbin_plot(long_rng, all_sizes, xlbl="$n$", ylbl="$V(n)$",
-                log=False, ignore_zeros=False, label="pooled")
+                log=False, ignore_zeros=False, label="pooled",
+                gridsize=100)
     
     hexbin_plot(rng, vocab_sizes[0], xlbl="$n$", ylbl="$V(n)$",
                 log=False, ignore_zeros=False, label="single",
-                color="red", edgecolors="red", cmap="Reds_r", cbar=False)
+                color="red", edgecolors="red", cmap="Reds_r", cbar=False,
+                gridsize=100)
     
     plt.legend(loc="upper left")
     plt.savefig(save_dir + "vocab_growth_" + 

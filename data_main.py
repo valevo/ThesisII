@@ -29,9 +29,10 @@ def heap(corp, rng):
         
     return vocab_sizes
 
-def heap_from_file(save_dir, rng):
-    rng_params = map(str, (min(rng), max(rng), len(rng)))
+def heap_from_file(save_dir, rng_params):
+    rng_params = map(str, rng_params)
     required_file_name = "vocab_growth_" + "_".join(rng_params) + ".pkl"
+    print(required_file_name)
     if required_file_name in os.listdir(save_dir):
         with open(save_dir + required_file_name, "rb") as handle:
             return pickle.load(handle)
@@ -93,11 +94,11 @@ if __name__ == "__main__":
     start, end, step = 0, n+1, n//2000
     rng = list(range(start, end, step))
     try:
-        v_ns = heap_from_file(d, rng)
+        v_ns = heap_from_file(d, (start, end, len(rng)))
     except FileNotFoundError:
         v_ns = heap(wiki, rng)
     
-    hexbin_plot(rng, v_ns, xlbl="$n$", ylbl="$V(n)$", log=False, gridsize=50)
+    hexbin_plot(rng, v_ns, xlbl="$n$", ylbl="$V(n)$", log=False, gridsize=100)
     
     heap = Heap(v_ns, rng)
     heap_fit = heap.fit(start_params=np.asarray([1.0, 1.0]), 
