@@ -32,8 +32,10 @@ def heap(corp, rng):
 def heap_from_file(save_dir, rng_params):
     rng_params = map(str, rng_params)
     required_file_name = "vocab_growth_" + "_".join(rng_params) + ".pkl"
-    print(required_file_name)
     if required_file_name in os.listdir(save_dir):
+        print("FILE FOUND... YAY")
+        print(required_file_name)
+        print()
         with open(save_dir + required_file_name, "rb") as handle:
             return pickle.load(handle)
     else:
@@ -98,10 +100,10 @@ if __name__ == "__main__":
     except FileNotFoundError:
         v_ns = heap(wiki, rng)
     
-    hexbin_plot(rng, v_ns, xlbl="$n$", ylbl="$V(n)$", log=False, gridsize=100)
+    hexbin_plot(rng, v_ns, xlbl="$n$", ylbl="$V(n)$", log=False, gridsize=75)
     
     heap = Heap(v_ns, rng)
-    heap_fit = heap.fit(start_params=np.asarray([1.0, 1.0]), 
+    heap_fit = heap.fit(start_params=np.asarray([100000.0, 1.0]), 
                                     method="powell", full_output=True)    
     heap.register_fit(heap_fit)
     heap.print_result()

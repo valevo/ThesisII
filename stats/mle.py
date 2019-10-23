@@ -244,7 +244,7 @@ class Heap(GenericLikelihoodModel):
         logprobs = list(binom.logpmf(t, bn, p)[0] 
                     for t, bn in zip(types, binom_ns))        
         logprobs_clipped = np.clip(logprobs, -10**6, 0)
-        return sum(logprobs_clipped) - beta*1000
+        return sum(logprobs_clipped)# - beta*1000
 
     def null_loglike(self):
         types, tokens = self.endog, self.exog

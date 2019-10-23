@@ -6,7 +6,7 @@
 module load pre2019
 module load Python/3.6.1-intel-2016b 
 
-echo "data_main job $PBS_JOBID started at `date`"
+echo "jackknife_main job $PBS_JOBID started at `date`"
 
 rsync -a $HOME/ThesisII "$TMPDIR"/ --exclude data --exclude .git
 
