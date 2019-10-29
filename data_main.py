@@ -33,8 +33,7 @@ def heap_from_file(save_dir, rng_params):
     rng_params = map(str, rng_params)
     required_file_name = "vocab_growth_" + "_".join(rng_params) + ".pkl"
     if required_file_name in os.listdir(save_dir):
-        print("FILE FOUND... YAY")
-        print(required_file_name)
+        print("FOUND HEAP FILE: " + required_file_name)
         print()
         with open(save_dir + required_file_name, "rb") as handle:
             return pickle.load(handle)

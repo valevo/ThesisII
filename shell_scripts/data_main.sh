@@ -19,8 +19,6 @@ cp -r $HOME/ThesisII/data/corpus.py "$TMPDIR"/ThesisII/data/
 
 for lang in EO FI ID KO NO TR VI; do
     echo "language: $lang"
-    echo $(ls $lang/plots)
-    echo
     echo
     cp -r $HOME/ThesisII/data/"$lang"_pkl "$TMPDIR"/ThesisII/data/
     
