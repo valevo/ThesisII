@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from collections import Counter
+import numpy as np
 
 def compute_freqs(corpus):
     type_counts = Counter(corpus.tokens())
@@ -20,12 +21,16 @@ def merge_to_joint(ranks, freqs):
     common_types = ranks.keys() & freqs.keys()
     return {w : (ranks[w], freqs[w]) for w in common_types}
 
-def pool_zipf(stat_ls):
-    common_types = set.intersection(
+
+def pool_stats(stat_ls, join_func=set.union):
+    common_types = join_func(
             *[set(stat_d.keys()) for stat_d in stat_ls]
             )
+    
     return {w: [stat_d[w] for stat_d in stat_ls] for w in common_types}    
 
+def reduce_pooled(pooled_stats, reduce_func=np.mean):
+    return {w: reduce_func(stats) for w, stats in pooled_stats.items()}
 
 def compute_vocab_size(corpus):
     return len(corpus.types())

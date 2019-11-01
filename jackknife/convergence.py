@@ -57,6 +57,8 @@ def convergence_main(wiki, rng, save_dir="./"):
     plt.close()
 
 
+
+
 if __name__ == "__main__":
     d = "results/ALS/"
     

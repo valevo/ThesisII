@@ -4,8 +4,7 @@ from data.reader import wiki_from_pickles
 from data.corpus import Sentences
 
 from stats.stat_functions import compute_ranks, compute_freqs,\
-                    merge_to_joint, compute_vocab_size,\
-                    pool_stats, reduce_pooled
+                    merge_to_joint, compute_vocab_size
                     
 from stats.mle import Mandelbrot, Heap
 
@@ -57,20 +56,12 @@ if __name__ == "__main__":
     n = int(25e6)
     m = 5
     
-    subsamples1 = (Sentences.subsample(wiki, n) for _ in range(m))
-    subsamples2 = (Sentences.subsample(wiki, n) for _ in range(m))
+    subsample1 = Sentences.subsample(wiki, n)
+    subsample2 = Sentences.subsample(wiki, n)
     
-    ranks = [compute_ranks(sub) for sub in subsamples1]
-    ranks_joined = pool_stats(ranks)
-    mean_ranks = reduce_pooled(ranks_joined)
-    
-    freqs = [compute_freqs(sub) for sub in subsamples2]
-    freqs_joined = pool_stats(freqs)
-    mean_freqs = reduce_pooled(freqs_joined)
-    
-    print("subsampling done")
-        
-    joints = merge_to_joint(mean_ranks, mean_freqs)
+    print("samples done")
+    ranks, freqs = compute_ranks(subsample1), compute_freqs(subsample2)
+    joints = merge_to_joint(ranks, freqs)
     xs, ys = list(zip(*sorted(joints.values())))
     
     hexbin_plot(xs, ys, xlbl="$\log$ $r(w)$", ylbl="$\log$ $f(w)$")
@@ -88,6 +79,8 @@ if __name__ == "__main__":
     plt.close()
     
     print("rank-freq relationship done")
+    
+    
     
     
     
