@@ -27,7 +27,8 @@ def pool_stats(stat_ls, join_func=set.union):
             *[set(stat_d.keys()) for stat_d in stat_ls]
             )
     
-    return {w: [stat_d[w] for stat_d in stat_ls] for w in common_types}    
+    return {w: [stat_d[w] for stat_d in stat_ls if w in stat_d] 
+            for w in common_types}    
 
 def reduce_pooled(pooled_stats, reduce_func=np.mean):
     return {w: reduce_func(stats) for w, stats in pooled_stats.items()}
