@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from data.reader import wiki_from_pickles
-from data.corpus import Sentences
+from data.corpus import Words, Sentences, Articles
 
 from stats.stat_functions import compute_ranks, compute_freqs,\
                     merge_to_joint, compute_vocab_size,\
@@ -50,12 +50,48 @@ def parse_args():
     args = p.parse_args()
     return args.lang
 
+
+def zipf_wrong(wiki, n, d):
+    subcorp = Articles.subsample(wiki, n)
+
+    ranks, freqs = compute_ranks(subcorp), compute_freqs(subcorp)
+    
+    joints = merge_to_joint(ranks, freqs)
+    xs, ys = list(zip(*sorted(joints.values())))
+    
+    hexbin_plot(xs, ys, xlbl="$\log$ $r(w)$", 
+                ylbl="$\log$ $f(w)$")
+    plt.savefig(d + "rank_freq_" + str(n) + "_wrong.png",
+            dpi=300)
+    plt.close()
+    
+    
+def zipf_piantadosi(wiki, n, d):
+    subcorp1 = Words.subsample(wiki, n)
+    subcorp2 = Words.subsample(wiki, n)
+    
+    ranks = compute_ranks(subcorp1)
+    freqs = compute_freqs(subcorp2)
+    
+    joints = merge_to_joint(ranks, freqs)
+    xs, ys = list(zip(*sorted(joints.values())))
+    
+    hexbin_plot(xs, ys, xlbl="$\log$ $r(w)$", 
+                ylbl="$\log$ $f(w)$")
+    plt.savefig(d + "rank_freq_" + str(n) + "_piantadosi.png",
+            dpi=300)
+    plt.close()
+    
+    
 if __name__ == "__main__":
     lang = parse_args()
     d = "results/" + lang + "/plots/"
     wiki = list(wiki_from_pickles("data/" + lang + "_pkl"))
     n = int(25e6)
     m = 5
+    
+    zipf_wrong(wiki, n, d)
+    zipf_piantadosi(wiki, n, d)
     
     subsamples1 = (Sentences.subsample(wiki, n) for _ in range(m))
     subsamples2 = (Sentences.subsample(wiki, n) for _ in range(m))

@@ -70,7 +70,7 @@ def join_stats_default(stat_ls, default_func):
 if __name__ == "__main__":
     lang = parse_args()
 #    d = "results/" + lang + "/plots/"
-    wiki = list(wiki_from_pickles("data/" + lang + "_pkl", n_tokens=int(10e6)))
+    wiki = list(wiki_from_pickles("data/" + lang + "_pkl", n_tokens=int(15e6)))
     n = int(1e6)
     
 
