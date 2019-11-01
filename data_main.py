@@ -126,7 +126,7 @@ if __name__ == "__main__":
     print("rank-freq relationship done")
     
     
-    
+    freqs = compute_freqs(Sentences.subsample(wiki, n))
     freq_of_freqs = Counter(freqs.values())
     xs, ys = list(zip(*freq_of_freqs.items()))
     
