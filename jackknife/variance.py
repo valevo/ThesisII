@@ -33,7 +33,7 @@ def variance_main(wiki, n, m, save_dir="./"):
 def mean_vs_pooled(rank_dist, freq_dist, save_dir):        
     all_joints = merge_to_joint(rank_dist, freq_dist)
     all_xs, all_ys = list(zip(*[(r, f) for r_ls, f_ls in all_joints.values()
-                                for r, f in zip(r_ls, f_ls)]))
+                                for r, f in zip(r_ls, f_ls) if f > 0]))
     
     hexbin_plot(all_xs, all_ys, xlbl=r"$\log$ $r(w)$", ylbl=r"$\log$ $f(w)$")
     

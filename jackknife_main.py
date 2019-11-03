@@ -33,7 +33,7 @@ if __name__ == "__main__":
     small_n = int(1e6)
     m = 20
     
-    sampling_levels_main(wiki, n, m, save_dir=d)
+    sampling_levels_main(wiki, small_n, m, save_dir=d)
     print("sampling levels done")
     
     variance_main(wiki, small_n, m, save_dir=d)
