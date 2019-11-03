@@ -25,9 +25,8 @@ def variance_main(wiki, n, m, save_dir="./"):
     freqs_joined = pool_stats(freqs)
 
 
-    mean_vs_pooled(ranks_joined, freqs_joined)
+    mean_vs_pooled(ranks_joined, freqs_joined, save_dir)
     
-
     do_mles(ranks, freqs, save_dir)
     
     covariance_across_words(ranks_joined, freqs_joined, save_dir)

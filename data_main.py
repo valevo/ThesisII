@@ -88,7 +88,7 @@ if __name__ == "__main__":
     d = "results/" + lang + "/plots/"
     wiki = list(wiki_from_pickles("data/" + lang + "_pkl"))
     n = int(25e6)
-    m = 20
+    m = 5
     
     zipf_wrong(wiki, n, d)
     zipf_piantadosi(wiki, n, d)
