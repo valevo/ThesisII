@@ -40,25 +40,26 @@ def do_mle(xs, ys, sampling_level, save_dir):
               sampling_level.__name__ + ".txt", "w") as handle:
         handle.write(mandelbrot.print_result(string=True))
 
+
 def sampling_levels_main(wiki, n, m, save_dir="./"):    
 
     art_mean_ranks, art_mean_freqs = get_mean_relationship(Articles,
                                                  wiki, n, m)
     art_joint = merge_to_joint(art_mean_ranks, art_mean_freqs)
-    xs, ys = list(zip(*sorted(art_joint.values())))
+    art_xs, art_ys = list(zip(*sorted(art_joint.values())))
     
-    hexbin_plot(xs, ys, xlbl=r"$\log$ $r(w)$", ylbl=r"$\log$ $f(w)$",
+    hexbin_plot(art_xs, art_ys, xlbl=r"$\log$ $r(w)$", ylbl=r"$\log$ $f(w)$",
                 label="articles")
     
-    do_mle(xs, ys, Articles, save_dir)
+    do_mle(art_xs, art_ys, Articles, save_dir)
     
     
     word_mean_ranks, word_mean_freqs = get_mean_relationship(Words,
                                                  wiki, n, m)
     word_joint = merge_to_joint(word_mean_ranks, word_mean_freqs)
-    xs, ys = list(zip(*sorted(word_joint.values())))
+    word_xs, word_ys = list(zip(*sorted(word_joint.values())))
     
-    hexbin_plot(xs, ys, xlbl=r"$\log$ $r(w)$", ylbl=r"$\log$ $f(w)$", 
+    hexbin_plot(word_xs, word_ys, xlbl=r"$\log$ $r(w)$", ylbl=r"$\log$ $f(w)$", 
                 color="red", edgecolors="red", cmap="Reds_r",
                 label="words", cbar=False)
     
@@ -66,15 +67,15 @@ def sampling_levels_main(wiki, n, m, save_dir="./"):
     plt.savefig(save_dir + "rank_freq_word_vs_article_" + str(n) + ".png",
                 dpi=300)
     plt.close()
-    do_mle(xs, ys, Words, save_dir)
+    do_mle(word_xs, word_ys, Words, save_dir)
     
     
     sent_mean_ranks, sent_mean_freqs = get_mean_relationship(Sentences,
                                                  wiki, n, m)
     sent_joint = merge_to_joint(sent_mean_ranks, sent_mean_freqs)
-    xs, ys = list(zip(*sorted(sent_joint.values())))
+    sent_xs, sent_ys = list(zip(*sorted(sent_joint.values())))
     
-    do_mle(xs, ys, Sentences, save_dir)
+    do_mle(sent_xs, sent_ys, Sentences, save_dir)
     
     
     
@@ -84,10 +85,8 @@ def sampling_levels_main(wiki, n, m, save_dir="./"):
     xs, ys = list(zip(*sorted(freq_joint.values())))
     
     hexbin_plot(xs, ys, 
-                xlbl=r"$\log$ $f(w)$ from articles", 
-                ylbl=r"$\log$ $f(w)$ from words",
-                edgecolors="blue", cmap="Blues_r", linewidths=0.2,
-                label="articles")    
+                xlbl=r"$\log$ $f(w)$ from texts", 
+                ylbl=r"$\log$ $f(w)$ from words")    
     plt.savefig(save_dir + "freq_correl_word_vs_article_" + str(n) + ".png",
                 dpi=300)
     plt.close()

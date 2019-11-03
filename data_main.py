@@ -5,7 +5,7 @@ from data.corpus import Words, Sentences, Articles
 
 from stats.stat_functions import compute_ranks, compute_freqs,\
                     merge_to_joint, compute_vocab_size,\
-                    pool_stats, reduce_pooled
+                    pool_ranks, pool_freqs, reduce_pooled
                     
 from stats.mle import Mandelbrot, Heap
 
@@ -88,7 +88,7 @@ if __name__ == "__main__":
     d = "results/" + lang + "/plots/"
     wiki = list(wiki_from_pickles("data/" + lang + "_pkl"))
     n = int(25e6)
-    m = 5
+    m = 10
     
     zipf_wrong(wiki, n, d)
     zipf_piantadosi(wiki, n, d)
@@ -97,11 +97,11 @@ if __name__ == "__main__":
     subsamples2 = (Sentences.subsample(wiki, n) for _ in range(m))
     
     ranks = [compute_ranks(sub) for sub in subsamples1]
-    ranks_joined = pool_stats(ranks)
+    ranks_joined = pool_ranks(ranks)
     mean_ranks = reduce_pooled(ranks_joined)
     
     freqs = [compute_freqs(sub) for sub in subsamples2]
-    freqs_joined = pool_stats(freqs)
+    freqs_joined = pool_freqs(freqs)
     mean_freqs = reduce_pooled(freqs_joined)
     
     print("subsampling done")
