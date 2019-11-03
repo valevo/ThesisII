@@ -116,10 +116,10 @@ if __name__ == "__main__":
                                     method="powell", full_output=True)    
     mandelbrot.register_fit(mandelbrot_fit)
     mandelbrot.print_result()
-    with open(d + "mle_mandelbrot_" + str(n) + ".txt", "w") as handle:
+    with open(d + "mle_mandelbrot_" + str(n) + "_" + str(m) + ".txt", "w") as handle:
         handle.write(mandelbrot.print_result(string=True))
     plot_preds(mandelbrot, np.asarray(xs))
-    plt.savefig(d + "rank_freq_" + str(n) + ".png",
+    plt.savefig(d + "rank_freq_" + str(n) + "_" + str(m) + ".png",
             dpi=300)
     plt.close()
     

@@ -43,11 +43,11 @@ def mean_vs_pooled(rank_dist, freq_dist, save_dir):
     mean_joints = merge_to_joint(mean_ranks, mean_freqs)
     mean_xs, mean_ys = list(zip(*sorted(mean_joints.values())))
     
-    hexbin_plot(all_xs, all_ys, xlbl=r"$\log$ $r(w)$", ylbl=r"$\log$ $f(w)$", 
+    hexbin_plot(mean_xs, mean_ys, xlbl=r"$\log$ $r(w)$", ylbl=r"$\log$ $f(w)$", 
                 color="red", edgecolors="red", cmap="Reds_r", cbar=False)
     
     
-    plt.legend()
+#    plt.legend()
     plt.savefig(save_dir + "rank_freq_mean_vs_var.png", dpi=300)
     plt.close()
 
@@ -89,14 +89,13 @@ def covariance_across_words(rank_dist, freq_dist, save_dir):
                         if w in cov_dict]))
     
     hexbin_plot(xs, ys, log=False, xscale="log", bins="log",
-                ingore_zeros=False, gridsize=100)
+                ignore_zeros=False, gridsize=100)
     
-    plt.legend()
+#    plt.legend()
     plt.savefig(save_dir + "dispersion.png", dpi=300)
     plt.close()
 
-    
-    
+
 
 def single_word_cov(rank_dist, freq_dist, r_w, save_dir):
     pass

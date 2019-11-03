@@ -3,7 +3,7 @@ from data.corpus import Words, Sentences, Articles
 
 from stats.stat_functions import compute_ranks, compute_freqs,\
                                 compute_normalised_freqs, merge_to_joint,\
-                                pool_stats, reduce_pooled
+                                reduce_pooled
                     
 from jackknife.plotting import hexbin_plot, plot_preds
 
@@ -38,33 +38,31 @@ def join_stats(stat_ls):
                 
     return stats_joined
 
-
-def join_ranks_fill(stat_ls):
-    all_types = set.union(
+def pool_ranks(stat_ls, join_func=set.union):
+    common_types = join_func(
             *[set(stat_d.keys()) for stat_d in stat_ls]
-            )
+            )   
     
-    stats_joined = {w: [] for w in all_types}
-    
+    stats_joined = {w: [] for w in common_types}
     for stat_d in stat_ls:
         final_r = len(stat_d)
-        for w in all_types:
+        for w in common_types:
             if w in stat_d:
                 stats_joined[w].append(stat_d[w])
             else:
                 stats_joined[w].append(final_r)
                 final_r += 1
     return stats_joined
-    
 
 
-def join_freqs_fill(stat_ls):
-    all_types = set.union(
+
+def pool_freqs(stat_ls, join_func=set.union):
+    common_types = join_func(
             *[set(stat_d.keys()) for stat_d in stat_ls]
             )
     
     return {w: [d[w] if w in d else rand.random() for d in stat_ls]
-            for w in all_types}
+            for w in common_types}
 
 
 if __name__ == "__main__":
@@ -77,7 +75,7 @@ if __name__ == "__main__":
     subsamples1 = (Sentences.subsample(wiki, n) for _ in range(m))
     
     ranks = [compute_ranks(sub) for sub in subsamples1]
-    ranks_joined = join_ranks_fill(ranks)
+    ranks_joined = pool_ranks(ranks)
     
     mean_ranks = reduce_pooled(ranks_joined)
         
@@ -86,7 +84,7 @@ if __name__ == "__main__":
     subsamples2 = (Sentences.subsample(wiki, n) for _ in range(m))
 
     freqs = [compute_freqs(sub) for sub in subsamples2]
-    freqs_joined = join_freqs_fill(freqs)
+    freqs_joined = pool_freqs(freqs)
     
     mean_freqs = reduce_pooled(freqs_joined)
     
