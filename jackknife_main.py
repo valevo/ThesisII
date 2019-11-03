@@ -4,8 +4,8 @@ from data.reader import wiki_from_pickles
 
 from jackknife.sampling_levels import sampling_levels_main
 from jackknife.variance import variance_main
-from jackknife.convergence import convergence_main
-from jackknife.heap import heap_main
+#from jackknife.convergence import convergence_main
+#from jackknife.heap import heap_main
 
 
 import argparse

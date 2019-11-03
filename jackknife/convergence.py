@@ -3,7 +3,7 @@ from data.reader import wiki_from_pickles
 from data.corpus import Words, Articles, Sentences
 
 from stats.stat_functions import compute_ranks, compute_freqs,\
-                compute_normalised_freqs, merge_to_joint, pool_zipf
+                compute_normalised_freqs, merge_to_joint
 
 from jackknife.plotting import hexbin_plot, colour_palette
 
