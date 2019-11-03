@@ -4,7 +4,7 @@ from data.reader import wiki_from_pickles
 from data.corpus import Words, Articles, Sentences
 
 from stats.stat_functions import compute_ranks, compute_freqs,\
-                        merge_to_joint, pool_stats, reduce_pooled
+                        merge_to_joint, pool_ranks, pool_freqs, reduce_pooled
 from stats.mle import Mandelbrot
 from jackknife.plotting import hexbin_plot
 
@@ -12,17 +12,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-
-
 def variance_main(wiki, n, m, save_dir="./"):
     subsamples1 = (Sentences.subsample(wiki, n) for _ in range(m))
     subsamples2 = (Sentences.subsample(wiki, n) for _ in range(m))
     
     ranks = [compute_ranks(sub) for sub in subsamples1]
-    ranks_joined = pool_stats(ranks)
+    ranks_joined = pool_ranks(ranks)
     
     freqs = [compute_freqs(sub) for sub in subsamples2]
-    freqs_joined = pool_stats(freqs)
+    freqs_joined = pool_freqs(freqs)
 
 
     mean_vs_pooled(ranks_joined, freqs_joined, save_dir)
