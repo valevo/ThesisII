@@ -29,16 +29,20 @@ if __name__ == "__main__":
     small_n = int(1e6)
     n = int(1e6)
     
-    sampling_levels_main(wiki, big_n, save_dir=d)
+    n = int(25e6)
+    small_n = int(1e6)
+    m = 20
+    
+    sampling_levels_main(wiki, n, m, save_dir=d)
     print("sampling levels done")
     
-    variance_main(wiki, n, small_n, big_n, save_dir=d)
+    variance_main(wiki, small_n, m, save_dir=d)
     print("variance done")
-
-    rng_conv = list(range(int(5e5), int(2.5e6)+1, int(5e5))) + [big_n]
-    convergence_main(wiki, rng_conv, save_dir=d)
-    print("convergence done")
-    
-    rng_params = 0, n*2+1, (n*2)//2000
-    heap_main(wiki, rng_params, save_dir=d)
-    print("heap done")
+#
+#    rng_conv = list(range(int(5e5), int(2.5e6)+1, int(5e5))) + [big_n]
+#    convergence_main(wiki, rng_conv, save_dir=d)
+#    print("convergence done")
+#    
+#    rng_params = 0, n*2+1, (n*2)//2000
+#    heap_main(wiki, rng_params, save_dir=d)
+#    print("heap done")

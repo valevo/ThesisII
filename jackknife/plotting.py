@@ -55,7 +55,7 @@ def hexbin_plot(xs, ys, xlbl=None, ylbl=None, log=True,
 
     hb = plt.hexbin(xs, ys, **params)
     
-    lims_x, lims_y = get_lims(xs, ys, log=log)
+    lims_x, lims_y = lims
     plt.xlim(lims_x)
     plt.ylim(lims_y)
     

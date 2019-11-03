@@ -3,46 +3,59 @@ from data.reader import wiki_from_pickles
 from data.corpus import Words, Articles, Sentences
 
 from stats.stat_functions import compute_ranks, compute_freqs,\
-                            merge_to_joint
+                            pool_stats, reduce_pooled, merge_to_joint
+
+from stats.mle import Mandelbrot
 
 from jackknife.plotting import hexbin_plot
 
+import numpy as np
 import matplotlib.pyplot as plt
 
+import scipy.stats as scistats
 
-def sampling_levels_main(wiki, n, save_dir="./"):    
-    art_subsample1 = Articles.subsample(wiki, n)
-    art_subsample2 = Articles.subsample(wiki, n)
+
+def get_mean_relationship(sampling_level, wiki, n, m):
+    subsamples1 = (sampling_level.subsample(wiki, n) for _ in range(m))
+    subsamples2 = (sampling_level.subsample(wiki, n) for _ in range(m))
     
-#    sent_subsample1 = Sentences.subsample(wiki, n)
-#    sent_subsample2 = Sentences.subsample(wiki, n)
+    ranks = [compute_ranks(sub) for sub in subsamples1]
+    ranks_joined = pool_stats(ranks)
+    mean_ranks = reduce_pooled(ranks_joined)
     
-    word_subsample1 =  Words.subsample(wiki, n)
-    word_subsample2 =  Words.subsample(wiki, n)
+    freqs = [compute_freqs(sub) for sub in subsamples2]
+    freqs_joined = pool_stats(freqs)
+    mean_freqs = reduce_pooled(freqs_joined)
     
-    
-    art_ranks = compute_ranks(art_subsample1)
-    art_freqs = compute_freqs(art_subsample2)
-    art_joint = merge_to_joint(art_ranks, art_freqs)
+    return mean_ranks, mean_freqs
+
+
+def do_mle(xs, ys, sampling_level, save_dir):
+    mandelbrot = Mandelbrot(ys, xs)
+    mandelbrot_fit = mandelbrot.fit(start_params=np.asarray([1.0, 1.0]), 
+                                    method="powell", full_output=True)    
+    mandelbrot.register_fit(mandelbrot_fit)
+    mandelbrot.print_result()
+    with open(save_dir + "mle_mandelbrot_" + 
+              sampling_level.__name__ + ".txt", "w") as handle:
+        handle.write(mandelbrot.print_result(string=True))
+
+def sampling_levels_main(wiki, n, m, save_dir="./"):    
+
+    art_mean_ranks, art_mean_freqs = get_mean_relationship(Articles,
+                                                 wiki, n, m)
+    art_joint = merge_to_joint(art_mean_ranks, art_mean_freqs)
     xs, ys = list(zip(*sorted(art_joint.values())))
     
     hexbin_plot(xs, ys, xlbl=r"$\log$ $r(w)$", ylbl=r"$\log$ $f(w)$",
                 label="articles")
-
     
-#    sent_ranks = compute_ranks(sent_subsample1)
-#    sent_freqs = compute_freqs(sent_subsample2)
-#    sent_joint = merge_to_joint(sent_ranks, sent_freqs)
-#    xs, ys = list(zip(*sorted(sent_joint.values())))
-#    
-#    hexbin_plot(xs, ys, xlbl="$\log~r(w)$", ylbl="$\log~f(w)$", 
-#                color="green", edgecolors="green", cmap="Greens_r",
-#                label="sentences", cbar=False)
+    do_mle(xs, ys, Articles, save_dir)
     
     
-    word_ranks = compute_ranks(word_subsample1)
-    word_freqs = compute_freqs(word_subsample2)
-    word_joint = merge_to_joint(word_ranks, word_freqs)
+    word_mean_ranks, word_mean_freqs = get_mean_relationship(Words,
+                                                 wiki, n, m)
+    word_joint = merge_to_joint(word_mean_ranks, word_mean_freqs)
     xs, ys = list(zip(*sorted(word_joint.values())))
     
     hexbin_plot(xs, ys, xlbl=r"$\log$ $r(w)$", ylbl=r"$\log$ $f(w)$", 
@@ -53,8 +66,21 @@ def sampling_levels_main(wiki, n, save_dir="./"):
     plt.savefig(save_dir + "rank_freq_word_vs_article_" + str(n) + ".png",
                 dpi=300)
     plt.close()
+    do_mle(xs, ys, Words, save_dir)
+    
+    
+    sent_mean_ranks, sent_mean_freqs = get_mean_relationship(Sentences,
+                                                 wiki, n, m)
+    sent_joint = merge_to_joint(sent_mean_ranks, sent_mean_freqs)
+    xs, ys = list(zip(*sorted(sent_joint.values())))
+    
+    do_mle(xs, ys, Sentences, save_dir)
+    
+    
+    
+    
 
-    freq_joint = merge_to_joint(art_freqs, word_freqs)
+    freq_joint = merge_to_joint(art_mean_freqs, word_mean_freqs)
     xs, ys = list(zip(*sorted(freq_joint.values())))
     
     hexbin_plot(xs, ys, 
@@ -65,14 +91,35 @@ def sampling_levels_main(wiki, n, save_dir="./"):
     plt.savefig(save_dir + "freq_correl_word_vs_article_" + str(n) + ".png",
                 dpi=300)
     plt.close()
-
-if __name__ == "__main__":
-    d = "results/ALS/"
-    n = int(1e6)
-    
-    wiki = list(wiki_from_pickles("data/ALS_pkl"))
-    
-    sampling_levels_main(wiki, n)
     
     
+    art_word_corr = scistats.spearmanr(xs, ys)
+    
+    
+    freq_joint = merge_to_joint(art_mean_freqs, sent_mean_freqs)
+    xs, ys = list(zip(*sorted(freq_joint.values())))
+    
+    art_sent_corr = scistats.spearmanr(xs, ys)
+    
+    
+    freq_joint = merge_to_joint(sent_mean_freqs, word_mean_freqs)
+    xs, ys = list(zip(*sorted(freq_joint.values())))
+    
+    sent_word_corr = scistats.spearmanr(xs, ys)
+    
+    
+    
+    with open(save_dir + "sampling_level_correlations.txt", "w") as handle:
+        handle.write("\t".join(["Articles-Words:", 
+                                str(art_word_corr.correlation),
+                                str(art_word_corr.pvalue)]))
+        handle.write("\n")
+        handle.write("\t".join(["Articles-Sentences:", 
+                                str(art_sent_corr.correlation),
+                                str(art_sent_corr.pvalue)]))
+        handle.write("\n")
+        handle.write("\t".join(["Sentences-Words:", 
+                                str(sent_word_corr.correlation),
+                                str(sent_word_corr.pvalue)]))
+        handle.write("\n")        
     

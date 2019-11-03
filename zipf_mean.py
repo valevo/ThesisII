@@ -84,7 +84,7 @@ if __name__ == "__main__":
         
     
     subsamples2 = (LEVEL.subsample(wiki, n) for _ in range(m))
-    
+
     freqs = [compute_freqs(sub) for sub in subsamples2]
     freqs_joined = join_stats(freqs)
     mean_freqs = {w: np.mean(f_ls) for w, f_ls in freqs_joined.items()}
@@ -92,55 +92,30 @@ if __name__ == "__main__":
     print(len(mean_freqs))
     
 
+
+
+    
+    min_ranks = {w: np.min(r_ls) for w, r_ls in ranks_joined.items()}
+    min_freqs = {w: np.min(f_ls) for w, f_ls in freqs_joined.items()}
+    
+    joints = merge_to_joint(min_ranks, min_freqs)
+    xs, ys = list(zip(*sorted(joints.values())))
+    hexbin_plot(xs, ys, color="red", edgecolors="red", cmap="Reds_r", cbar=False)   
+    
+    max_ranks = {w: np.max(r_ls) for w, r_ls in ranks_joined.items()}
+    max_freqs = {w: np.max(f_ls) for w, f_ls in freqs_joined.items()}
+    
+    joints = merge_to_joint(max_ranks, max_freqs)
+    xs, ys = list(zip(*sorted(joints.values())))
+    hexbin_plot(xs, ys, color="green", edgecolors="green", cmap="Greens_r", cbar=False)    
+
+
     joints = merge_to_joint(mean_ranks, mean_freqs)
     xs, ys = list(zip(*sorted(joints.values())))
     
     hexbin_plot(xs, ys, xlbl="$\log$ $\overline{r}(w)$", 
                 ylbl="$\log$ $\overline{f}(w)$", label=str(m))
-    
-    
-#    mandelbrot = Mandelbrot(ys, xs)
-#    mandelbrot_fit = mandelbrot.fit(start_params=np.asarray([1.0, 1.0]), 
-#                                    method="powell", full_output=True)    
-#    mandelbrot.register_fit(mandelbrot_fit)
-#    mandelbrot.print_result()
-#    plot_preds(mandelbrot, np.asarray(xs))
 
-    
-    
-    subsamples1 = [LEVEL.subsample(wiki, n)]
-    
-    ranks = [compute_ranks(sub) for sub in subsamples1]
-    mean_ranks = {w: np.mean(rs)  for w, rs in pool_zipf(ranks).items()}
-    
-    print(len(mean_ranks))
-    
-    subsamples2 = [LEVEL.subsample(wiki, n)]
-    
-    freqs = [compute_freqs(sub) for sub in subsamples2]
-    mean_freqs = {w: np.mean(fs)  for w, fs in pool_zipf(freqs).items()}
-    
-    print(len(mean_freqs))
-
-    joints = merge_to_joint(mean_ranks, mean_freqs)
-    xs, ys = list(zip(*sorted(joints.values())))
-    
-    hexbin_plot(xs, ys, xlbl="$\log$ $\overline{r}(w)$", 
-                ylbl="$\log$ $\overline{f}(w)$",
-                color="red", edgecolors="red", cmap="Reds_r", cbar=False,
-                alpha=0.5, label=str(1))
-    
-    
-#    all_sents = Sentences([s for a in wiki for s in a])
-#    
-#    all_ranks = compute_ranks(all_sents)
-#    all_freqs = compute_normalised_freqs(all_sents)
-#    
-#    joints = merge_to_joint(all_ranks, all_freqs)
-#    xs, ys = list(zip(*sorted(joints.values())))
-#    
-#    plt.loglog(xs, ys, '.', color="green")
-    
     
     plt.legend()
     plt.title("Sampling level: " + LEVEL.__name__)
