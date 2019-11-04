@@ -34,7 +34,11 @@ def remove_zeros(x_vals, y_vals):
 
 def hexbin_plot(xs, ys, xlbl=None, ylbl=None, log=True,
                 ignore_zeros=True, cbar=True,
-                set_aspect=False, lims=None, equal_aspect=False, **plt_args):
+                set_aspect=False, lims=None, equal_aspect=False, min_y=None,
+                **plt_args):
+    
+    if min_y is not None:
+        xs, ys = list(zip(*[(x, y) for x, y in zip(xs, ys) if y >= min_y]))
     
     if not lims:
         lims = get_lims(xs, ys, log=log)

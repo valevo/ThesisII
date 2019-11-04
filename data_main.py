@@ -87,7 +87,7 @@ if __name__ == "__main__":
     lang = parse_args()
     d = "results/" + lang + "/plots/"
     wiki = list(wiki_from_pickles("data/" + lang + "_pkl"))
-    n = int(25e6)
+    n = int(10e6)
     m = 10
     
     zipf_wrong(wiki, n, d)
@@ -109,7 +109,7 @@ if __name__ == "__main__":
     joints = merge_to_joint(mean_ranks, mean_freqs)
     xs, ys = list(zip(*sorted(joints.values())))
     
-    hexbin_plot(xs, ys, xlbl="$\log$ $r(w)$", ylbl="$\log$ $f(w)$")
+    hexbin_plot(xs, ys, xlbl="$\log$ $r(w)$", ylbl="$\log$ $f(w)$", min_y=1)
     
     mandelbrot = Mandelbrot(ys, xs)
     mandelbrot_fit = mandelbrot.fit(start_params=np.asarray([1.0, 1.0]), 

@@ -35,7 +35,8 @@ def mean_vs_pooled(rank_dist, freq_dist, save_dir):
     all_xs, all_ys = list(zip(*[(r, f) for r_ls, f_ls in all_joints.values()
                                 for r, f in zip(r_ls, f_ls) if f > 0]))
     
-    hexbin_plot(all_xs, all_ys, xlbl=r"$\log$ $r(w)$", ylbl=r"$\log$ $f(w)$")
+    hexbin_plot(all_xs, all_ys, xlbl=r"$\log$ $r(w)$", ylbl=r"$\log$ $f(w)$",
+                min_y=1)
     
     mean_ranks = reduce_pooled(rank_dist)
     mean_freqs = reduce_pooled(freq_dist)
@@ -44,7 +45,8 @@ def mean_vs_pooled(rank_dist, freq_dist, save_dir):
     mean_xs, mean_ys = list(zip(*sorted(mean_joints.values())))
     
     hexbin_plot(mean_xs, mean_ys, xlbl=r"$\log$ $r(w)$", ylbl=r"$\log$ $f(w)$", 
-                color="red", edgecolors="red", cmap="Reds_r", cbar=False)
+                color="red", edgecolors="red", cmap="Reds_r", cbar=False,
+                min_y=1)
     
     
 #    plt.legend()

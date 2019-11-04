@@ -49,7 +49,7 @@ def sampling_levels_main(wiki, n, m, save_dir="./"):
     art_xs, art_ys = list(zip(*sorted(art_joint.values())))
     
     hexbin_plot(art_xs, art_ys, xlbl=r"$\log$ $r(w)$", ylbl=r"$\log$ $f(w)$",
-                label="articles")
+                label="articles", min_y=1)
     
     do_mle(art_xs, art_ys, Articles, save_dir)
     
@@ -71,7 +71,7 @@ def sampling_levels_main(wiki, n, m, save_dir="./"):
     
     hexbin_plot(word_xs, word_ys, xlbl=r"$\log$ $r(w)$", ylbl=r"$\log$ $f(w)$", 
                 color="red", edgecolors="red", cmap="Reds_r",
-                label="words", cbar=False)
+                label="words", cbar=False, min_y=1)
     
     do_mle(word_xs, word_ys, Words, save_dir)
 
@@ -94,6 +94,18 @@ def sampling_levels_main(wiki, n, m, save_dir="./"):
     plt.savefig(save_dir + "freq_correl_word_vs_article_" + str(n) + ".png",
                 dpi=300)
     plt.close()
+    
+    
+    rank_joint = merge_to_joint(art_mean_ranks, word_mean_ranks)
+    xs, ys = list(zip(*sorted(rank_joint.values())))
+    
+    hexbin_plot(xs, ys, 
+                xlbl=r"$\log$ $r(w)$ from texts", 
+                ylbl=r"$\log$ $r(w)$ from words")    
+    plt.savefig(save_dir + "rank_correl_word_vs_article_" + str(n) + ".png",
+                dpi=300)
+    plt.close()
+    
     
     
     art_word_corr = scistats.spearmanr(xs, ys)
