@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -N 1
-#SBATCH -t 5:00:00
+#SBATCH -t 14:00:00
 #SBATCH --mem=30G
 
 module load pre2019
@@ -16,8 +16,8 @@ mkdir data
 cp -r $HOME/ThesisII/data/reader.py "$TMPDIR"/ThesisII/data/
 cp -r $HOME/ThesisII/data/corpus.py "$TMPDIR"/ThesisII/data/
 
-
-for lang in EO FI ID KO NO TR VI; do
+# EO FI
+for lang in ID KO NO TR VI; do
     echo "language: $lang"
     echo
     cp -r $HOME/ThesisII/data/"$lang"_pkl "$TMPDIR"/ThesisII/data/

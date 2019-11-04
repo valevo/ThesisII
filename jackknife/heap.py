@@ -38,7 +38,7 @@ def heap_from_file(save_dir, rng_params):
         raise FileNotFoundError
         
 def heap_main(wiki, rng_params, save_dir="./"):
-    m = 20    
+    m = 20
     rng = list(range(*rng_params))
     
     try:
@@ -69,8 +69,41 @@ def heap_main(wiki, rng_params, save_dir="./"):
               str(min(rng)) + "_" + str(max(rng)) + "_" + str(len(rng)) + 
               ".pkl", "wb") as handle:
         pickle.dump(vocab_sizes, handle)
+
+
+        
+def heap_main_new(wiki, rng_params, m, save_dir="./"):
+    rng = list(range(*rng_params))
     
+    try:
+        vocab_sizes = heap_from_file(save_dir, 
+                                     (rng_params[0], rng_params[1], len(rng)))
+    except FileNotFoundError:
+        vocab_sizes = [heap(wiki, rng) for _ in range(m)]
     
+    all_sizes = [v_n for size_ls in vocab_sizes for v_n in size_ls]
+        
+    long_rng = np.tile(rng, m)    
+    hexbin_plot(long_rng, all_sizes, xlbl="$n$", ylbl="$V(n)$",
+                log=False, ignore_zeros=False, label="pooled",
+                gridsize=100)
+    
+    hexbin_plot(rng, vocab_sizes[0], xlbl="$n$", ylbl="$V(n)$",
+                log=False, ignore_zeros=False, label="single",
+                color="red", edgecolors="red", cmap="Reds_r", cbar=False,
+                gridsize=100)
+    
+    plt.legend(loc="upper left")
+    plt.savefig(save_dir + "vocab_growth_" + 
+                str(min(rng)) + "_" + str(max(rng)) + "_" + str(len(rng)) + ".png",
+                dpi=300)
+    plt.close()
+    
+    with open(save_dir + "vocab_growth_" + 
+              str(min(rng)) + "_" + str(max(rng)) + "_" + str(len(rng)) + 
+              ".pkl", "wb") as handle:
+        pickle.dump(vocab_sizes, handle)
+
 
 if __name__ == "__main__":
     wiki = list(wiki_from_pickles("data/ALS_pkl"))

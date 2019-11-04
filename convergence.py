@@ -44,11 +44,11 @@ def do_mle(xs, ys, n, file_handle):
     mandelbrot_fit = mandelbrot.fit(start_params=np.asarray([1.0, 1.0]), 
                                     method="powell", full_output=True)    
     mandelbrot.register_fit(mandelbrot_fit)
-#    mandelbrot.print_result()
+    mandelbrot.print_result()
     file_handle.write(str(n))
     file_handle.write("\n")
     file_handle.write(mandelbrot.print_result(string=True))
-    file_handle.write("\n\n")
+    file_handle.write("\n")
 
 def convergence_main(wiki, rng, m, save_dir="./"):
     handle = open(save_dir + "mle_mandelbrot_convergence_" + 
@@ -91,6 +91,8 @@ def convergence_main(wiki, rng, m, save_dir="./"):
     plt.savefig(save_dir + "convergence_probs_" + "_".join(map(str, rng)) + ".png",
                 dpi=300)
     plt.close()
+
+
 
 
 if __name__ == "__main__":

@@ -4,7 +4,7 @@ from data.reader import wiki_from_pickles
 
 from jackknife.sampling_levels import sampling_levels_main
 from jackknife.variance import variance_main
-#from jackknife.convergence import convergence_main
+from jackknife.convergence import convergence_main
 #from jackknife.heap import heap_main
 
 
@@ -38,11 +38,11 @@ if __name__ == "__main__":
     
     variance_main(wiki, small_n, m, save_dir=d)
     print("variance done")
-#
-#    rng_conv = list(range(int(5e5), int(2.5e6)+1, int(5e5))) + [big_n]
-#    convergence_main(wiki, rng_conv, save_dir=d)
-#    print("convergence done")
-#    
+
+    rng_conv = list(range(int(5e5), int(2.5e6)+1, int(5e5)))
+    convergence_main(wiki, rng_conv, m, save_dir=d)
+    print("convergence done")
+    
 #    rng_params = 0, n*2+1, (n*2)//2000
 #    heap_main(wiki, rng_params, save_dir=d)
 #    print("heap done")
