@@ -50,6 +50,7 @@ def do_mle(xs, ys, n, file_handle):
     file_handle.write(mandelbrot.print_result(string=True))
     file_handle.write("\n\n")
 
+
 def convergence_main(wiki, rng, m, save_dir="./"):
     handle = open(save_dir + "mle_mandelbrot_convergence_" + 
                   "_".join(map(str, rng)) + ".txt", "w")
@@ -65,9 +66,7 @@ def convergence_main(wiki, rng, m, save_dir="./"):
                     cbar=(True if i==0 else False), min_y=1)
         
         do_mle(xs, ys, n, handle)
-        
-        print(i)
-    
+            
     handle.close()
     
     plt.legend()

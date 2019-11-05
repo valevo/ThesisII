@@ -46,10 +46,10 @@ def mean_vs_pooled(rank_dist, freq_dist, save_dir):
     
     hexbin_plot(mean_xs, mean_ys, xlbl=r"$\log$ $r(w)$", ylbl=r"$\log$ $f(w)$", 
                 color="red", edgecolors="red", cmap="Reds_r", cbar=False,
-                min_y=1)
+                min_y=1, label="mean")
     
     
-#    plt.legend()
+    plt.legend()
     plt.savefig(save_dir + "rank_freq_mean_vs_var.png", dpi=300)
     plt.close()
 
@@ -91,6 +91,7 @@ def covariance_across_words(rank_dist, freq_dist, save_dir):
                         if w in cov_dict]))
     
     hexbin_plot(xs, ys, log=False, xscale="log", bins="log",
+                xlbl="$\overline{r}(w)$", ylbl="$D(w)$",
                 ignore_zeros=False, gridsize=100)
     
 #    plt.legend()

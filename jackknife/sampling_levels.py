@@ -96,18 +96,6 @@ def sampling_levels_main(wiki, n, m, save_dir="./"):
     plt.close()
     
     
-    rank_joint = merge_to_joint(art_mean_ranks, word_mean_ranks)
-    xs, ys = list(zip(*sorted(rank_joint.values())))
-    
-    hexbin_plot(xs, ys, 
-                xlbl=r"$\log$ $r(w)$ from texts", 
-                ylbl=r"$\log$ $r(w)$ from words")    
-    plt.savefig(save_dir + "rank_correl_word_vs_article_" + str(n) + ".png",
-                dpi=300)
-    plt.close()
-    
-    
-    
     art_word_corr = scistats.spearmanr(xs, ys)
     
     
@@ -123,7 +111,7 @@ def sampling_levels_main(wiki, n, m, save_dir="./"):
     sent_word_corr = scistats.spearmanr(xs, ys)
 
     
-    with open(save_dir + "sampling_level_correlations.txt", "w") as handle:
+    with open(save_dir + "freq_sampling_level_correlations.txt", "w") as handle:
         handle.write("\t".join(["Articles-Words:", 
                                 str(art_word_corr.correlation),
                                 str(art_word_corr.pvalue)]))
@@ -136,4 +124,49 @@ def sampling_levels_main(wiki, n, m, save_dir="./"):
                                 str(sent_word_corr.correlation),
                                 str(sent_word_corr.pvalue)]))
         handle.write("\n")        
+    
+    
+    
+    
+    
+    
+    rank_joint = merge_to_joint(art_mean_ranks, word_mean_ranks)
+    xs, ys = list(zip(*sorted(rank_joint.values())))
+    
+    hexbin_plot(xs, ys, 
+                xlbl=r"$\log$ $r(w)$ from texts", 
+                ylbl=r"$\log$ $r(w)$ from words")    
+    plt.savefig(save_dir + "rank_correl_word_vs_article_" + str(n) + ".png",
+                dpi=300)
+    plt.close()
+
+
+    art_word_corr = scistats.spearmanr(xs, ys)
+    
+    
+    rank_joint = merge_to_joint(art_mean_ranks, sent_mean_ranks)
+    xs, ys = list(zip(*sorted(rank_joint.values())))
+    
+    art_sent_corr = scistats.spearmanr(xs, ys)
+    
+    
+    rank_joint = merge_to_joint(sent_mean_ranks, word_mean_ranks)
+    xs, ys = list(zip(*sorted(rank_joint.values())))
+    
+    sent_word_corr = scistats.spearmanr(xs, ys)
+
+    
+    with open(save_dir + "rank_sampling_level_correlations.txt", "w") as handle:
+        handle.write("\t".join(["Articles-Words:", 
+                                str(art_word_corr.correlation),
+                                str(art_word_corr.pvalue)]))
+        handle.write("\n")
+        handle.write("\t".join(["Articles-Sentences:", 
+                                str(art_sent_corr.correlation),
+                                str(art_sent_corr.pvalue)]))
+        handle.write("\n")
+        handle.write("\t".join(["Sentences-Words:", 
+                                str(sent_word_corr.correlation),
+                                str(sent_word_corr.pvalue)]))
+        handle.write("\n")
     
