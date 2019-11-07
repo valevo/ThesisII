@@ -16,8 +16,8 @@ mkdir data
 cp $HOME/ThesisII/data/reader.py "$TMPDIR"/ThesisII/data/
 cp $HOME/ThesisII/data/corpus.py "$TMPDIR"/ThesisII/data/
 
-
-for lang in EO FI ID KO NO TR VI; do
+#  EO FI ID KO
+for lang in NO TR VI; do
     echo "language: $lang"
     cp -r $HOME/ThesisII/data/"$lang"_pkl "$TMPDIR"/ThesisII/data/
     
