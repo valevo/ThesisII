@@ -22,7 +22,7 @@ echo "language: $lang"
 
 cp -r $HOME/ThesisII/data/"$lang"_pkl "$TMPDIR"/ThesisII/data/
 
-python3 typicality_eval.py --lang=$lang --factors 2 18 22 --hist_lens 2 64 81 
+python3 typicality_eval.py --lang=$lang --factors 14 18 22 --hist_lens 32 64 81 
     
 echo
 echo "done with language $lang at `date`"
