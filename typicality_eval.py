@@ -255,7 +255,8 @@ if __name__ == "__main__":
     
 
     # across filter comparisons
-    across_filter_plots(tfs[26], srfs[32], 26, 32, unis)
+    max_f, max_h = max(factors), max(hist_lens)
+    across_filter_plots(tfs[max_f], srfs[max_h], max_f, max_h, unis)
     plt.savefig(results_d + "across_comp_rank_freq.png", dpi=300)
     plt.close()
     
