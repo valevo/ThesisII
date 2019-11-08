@@ -150,17 +150,17 @@ def typicality_distributions(tf_dict, srf_dict, unis, ref_dist, rank_dict):
     
     srf_typ_dict = {param: samples_to_typicality(samples, 
                                                  ref_dist, rank_dict)
-                    for param, samples in tf_dict.items()}
+                    for param, samples in srf_dict.items()}
     
     uni_typs = samples_to_typicality(unis, ref_dist, rank_dict)
     
     for param, typs in tf_typ_dict.items():
-        sns.distplot(typs, label=str(param))
+        sns.distplot(typs, label="TF " + str(param))
     
     for param, typs in srf_typ_dict.items():
-        sns.distplot(typs, label=str(param))    
+        sns.distplot(typs, label="SRF " + str(param))    
         
-    sns.distplot(uni_typs)
+    sns.distplot(uni_typs, label="UNIF")
     
     plt.legend()
     plt.show()
@@ -278,7 +278,7 @@ if __name__ == "__main__":
             handle.write(str(param))
             handle.write("\n")
             handle.write(mandel.print_result(string=True))
-            handle.wirte("\n\n")
+            handle.write("\n\n")
             
     with open(results_d + "mle_mandelbrot_srfs.txt", "w") as handle:
         for param, mandel in srf_mles.items():
