@@ -139,9 +139,7 @@ def get_reference_dist(wiki):
 
 def samples_to_typicality(samples, ref_dist, rank_dict):
     freqs = [compute_freqs(s) for s in samples]
-    print(len(freqs[0]))
     joints = [merge_to_joint(rank_dict, f_dict) for f_dict in freqs]
-    print(len(joints[0]))
     typs = [typicality(ref_dist, j) for j in joints] 
     return typs
 
@@ -154,7 +152,7 @@ def typicality_distributions(tf_dict, srf_dict, unis, ref_dist, rank_dict):
                                                  ref_dist, rank_dict)
                     for param, samples in tf_dict.items()}
     
-    uni_typs = samples_to_typicality(unis)
+    uni_typs = samples_to_typicality(unis, ref_dist, rank_dict)
     
     for param, typs in tf_typ_dict.items():
         sns.distplot(typs, label=str(param))
