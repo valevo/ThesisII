@@ -70,6 +70,8 @@ def hexbin_plot(xs, ys, xlbl=None, ylbl=None, log=True,
         plt.xlabel(xlbl)
     if ylbl:
         plt.ylabel(ylbl)
+        
+    return lims
 
 
 
