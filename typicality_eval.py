@@ -211,6 +211,7 @@ def parse_args():
 
 if __name__ == "__main__":
     lang, factors, hist_lens = parse_args()
+    print("ARGS: ", lang, factors, hist_lens, "\n")
     d =  "results/" + lang + "/"
     results_d = d + "evaluation/"
 
