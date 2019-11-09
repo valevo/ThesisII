@@ -285,4 +285,4 @@ if __name__ == "__main__":
             handle.write(str(param))
             handle.write("\n")
             handle.write(mandel.print_result(string=True))
-            handle.wirte("\n\n")
+            handle.write("\n\n")
