@@ -153,7 +153,7 @@ def typicality_distributions(tf_dict, srf_dict, unis, ref_dist, rank_dict):
         sns.distplot(typs, label="SRF " + str(param), hist_kws=hist_args)    
         
     sns.distplot(uni_typs, label="UNIF", 
-                 axlabel="$a(C^k; P_{\hat{\alpha}, \hat{\beta}})$", hist_kws=hist_args)
+                 axlabel="$a(C^k; P_{\hat{\\alpha}, \hat{\\beta}})$", hist_kws=hist_args)
     
     plt.legend()
 #    plt.show()
