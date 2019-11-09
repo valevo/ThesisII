@@ -4,46 +4,54 @@ from data.reader import corpora_from_pickles
 from data.corpus import Sentences
 
 from evaluation.lex_diversity import main as lex_main
-from evaluation.len_dists import main as len_main
+from evaluation.len_dists import main as len_dists_main
 from evaluation.heap import heap_main
 
 
 
+import argparse
+
+def parse_args():
+    p = argparse.ArgumentParser()
+    p.add_argument("--lang", type=str)
+    p.add_argument("--factors", nargs="*", type=int, default=[])
+    p.add_argument("--hist_lens", nargs="*", type=int, default=[])
+    
+    args = p.parse_args()
+    return args.lang, args.factors, args.hist_lens
+
+
+def get_filters(filter_dir, k, names, param_name, param_ls):
+    filters_dict = {}
+    
+    for param in param_ls:
+        all_samples = corpora_from_pickles(filter_dir, names=names)
+        cur_param_filters = [Sentences(c) for name_d, c in all_samples if 
+                             name_d["k"] == k and name_d[param_name] == param]
+        filters_dict[param] = cur_param_filters
+        
+    return filters_dict
+
 if __name__ == "__main__":
-    n = 100000
-    d = "results/ALS/"
+    lang, factors, hist_lens = parse_args()
+    print("ARGS: ", lang, factors, hist_lens, "\n")
+    d =  "results/" + lang + "/"
+    results_d = d + "evaluation/"
+
+    k = 1000000
+    
+    srfs = get_filters(d + "SRF/", k, ["k", "h", "i"], "h", hist_lens)
+    tfs = get_filters(d + "TF/", k, ["k", "f", "i"], "f", factors)
+    unis = [Sentences(c) for _, c in corpora_from_pickles(d + "UNI", names=["k", "i"])]
     
     
-    ## LOAD CORPORA
-    # SRFs    
-    srf_samples = list(corpora_from_pickles(d + "SRF", names=["n", "h", "i"]))
-    srf_10 = [Sentences(c) for name_d, c in srf_samples if name_d["n"] == n and 
-                                                  name_d["h"] == 10]
-    srf_20 = [Sentences(c) for name_d, c in srf_samples if name_d["n"] == n and 
-                                                  name_d["h"] == 20]
-    srf_30 = [Sentences(c) for name_d, c in srf_samples if name_d["n"] == n and 
-                                                  name_d["h"] == 30]
-    #TFs
-    tf_samples = list(corpora_from_pickles(d + "TF", names=["n", "f", "i"]))
-    tf_50 = [Sentences(c) for name_d, c in tf_samples if name_d["n"] == n and 
-                                                  name_d["f"] == 50]  
-    tf_100 = [Sentences(c) for name_d, c in tf_samples if name_d["n"] == n and 
-                                                  name_d["f"] == 100]    
-    #UNIs
-    uni_samples = corpora_from_pickles(d + "UNI", names=["n", "i"])
-    uni = [Sentences(c) for name_d, c in uni_samples if name_d["n"] == n]
+    # HEAP
+    rng = list(range(0, k, k//1000))
+    heap_main(tfs, srfs, unis, rng, results_d)
     
-    subcorp_sets = [srf_10, srf_20, srf_30, tf_50, tf_100, uni]
-    names = ["SRF10", "SRF20", "SRF30", "TF50", "TF100", "UNI"]
+    print("heap_main done")
+    
+    # LEN DISTS
+    len_dists_main(tfs, srfs, unis, results_d)
     
     
-    ## LENGTH DISTS
-#    len_main(subcorp_sets, names)
-    
-    
-    ## LEX DIV MEASURES
-#    lex_mhain(subcorp_sets, names)
-    
-    
-    ## HEAP 
-    heap_main(subcorp_sets, names, rng=range(1000, 100000, 5000))

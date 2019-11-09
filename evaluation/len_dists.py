@@ -11,90 +11,128 @@ import seaborn as sns
 import numpy as np
 import numpy.random as rand
 
-sns.set_palette(colour_palette)
+from scipy.stats import levene, kruskal
+
+sns.set_palette(colour_palette)    
+    
+    
+def get_lens(sample_ls, level="word", upper_lim=np.inf):
+    level_func = Sentences.tokens if level == "word" else Sentences.sentences
+    all_lens = [len(elem) for sents in sample_ls for elem in level_func(sents)
+                if len(elem) < upper_lim and len(elem) > 0]
+    return all_lens
 
 
-def sent_len_dists(subcorp_sets, names):
-    all_xs = []
-    all_ys = []
-    means_stddevs = dict()
-    for subcorp_set, name in zip(subcorp_sets, names):
-        
-        i = rand.randint(len(subcorp_set))
-        
-        all_lens = [len(s) for s in subcorp_set[i].sentences() if len(s) < 40
-                    and len(s) > 0]
-        all_xs.extend(all_lens)
-        
-        lbls = [name]*len(all_lens)
-        all_ys.extend(lbls)
-        
-        means_stddevs[name] = (np.mean(all_lens), np.var(all_lens)**.5)
+def plot_dist(tfs, srfs, unis, level="word", upper_lim=np.inf, save_dir="./"):
+    all_xs, all_ys = [], []
+    for param, samples in sorted(tfs.items(), reverse=True):
+        lens = get_lens(samples, level=level, upper_lim=upper_lim)
+        all_xs.extend(lens)
+        all_ys.extend(["TF " + str(param)]*len(lens))
     
-    print(means_stddevs)
-    sns.violinplot(x=all_xs, y=all_ys, cut=0)
-    plt.xlabel("Sentence Length")
-    plt.show()    
-    return means_stddevs
+    uni_lens = get_lens(unis, level=level, upper_lim=upper_lim)
+    all_xs.extend(uni_lens)
+    all_ys.extend(["UNIF"]*len(uni_lens))
     
-
-def word_len_dists(subcorp_sets, names):
-    all_xs = []
-    all_ys = []
-    means_stddevs = dict()
-    for subcorp_set, name in zip(subcorp_sets, names):
-        
-        i = rand.randint(len(subcorp_set))
-        
-        all_lens = [len(w) for w in subcorp_set[i].tokens() 
-            if len(w) < 20 and len(w) > 0]
-        all_xs.extend(all_lens)
-        
-        lbls = [name]*len(all_lens)
-        all_ys.extend(lbls)
-        
-        means_stddevs[name] = (np.mean(all_lens), np.var(all_lens)**.5)
     
-    print(means_stddevs)
-    sns.violinplot(x=all_xs, y=all_ys, cut=0)
-    plt.xlabel("Word Length")
-    plt.show()    
-    return means_stddevs
+    for param, samples in sorted(srfs.items()):
+        lens = get_lens(samples, level=level, upper_lim=upper_lim)
+        all_xs.extend(lens)
+        all_ys.extend(["SRF " + str(param)]*len(lens))            
+    
+    sns.violinplot(all_xs, all_ys, cut=0, axlabel=level + " length")
+    plt.savefig(save_dir + level + "_len_dists.png", dpi=300)
+    plt.close()
+    
+    
+def get_mean_std(sample_dict, level="word", upper_lim=np.inf):
+    lens_dict = {param: get_lens(sample_ls, level=level, upper_lim=upper_lim)
+            for param, sample_ls in sample_dict.items()}
+    
+    return {param: (np.mean(lens), np.var(lens)**.5)
+            for param, lens in lens_dict.items()}
 
 
-def main(subcorp_sets, names):
-    sent_mean_dict = sent_len_dists(subcorp_sets, names)
-    word_mean_dict = word_len_dists(subcorp_sets, names)
+def mean_std_table(tfs, srfs, unis, level="word", upper_lim=np.inf, save_dir="./"):
+    with open(save_dir + "TF_" + level + "_len_means.txt", "w") as handle:
+        for param, (m, s) in get_mean_std(tfs).items():
+            handle.write(str(param) + "\t")
+            handle.write(str(round(m, 3)) + " " + str(round(s, 3)))
+            
+    with open(save_dir + "SRF_" + level + "_len_means.txt", "w") as handle:
+        for param, (m, s) in get_mean_std(srfs).items():
+            handle.write(str(param) + "\t")
+            handle.write(str(round(m, 3) + " " + str(round(s, 3))))
+            
+    with open(save_dir + "UNI_" + level + "_len_means.txt", "w") as handle:
+        uni_lens = get_lens(unis, level=level, upper_lim=upper_lim)
+        m, s = np.mean(uni_lens), np.var(uni_lens)**.5
+        handle.write("\t")
+        handle.write(str(round(m, 3)) + " " + str(round(s, 3)))
+        
+    
     
 
 
-if __name__ == "__main__":
-    n = 100000
-    d = "results/ALS/"
+import argparse
+
+def parse_args():
+    p = argparse.ArgumentParser()
+    p.add_argument("--lang", type=str)
+    p.add_argument("--factors", nargs="*", type=int, default=[])
+    p.add_argument("--hist_lens", nargs="*", type=int, default=[])
     
-    ## LOAD CORPORA
-    # SRFs    
-    srf_samples = list(corpora_from_pickles(d + "SRF", names=["n", "h", "i"]))
-    srf_10 = [Sentences(c) for name_d, c in srf_samples if name_d["n"] == n and 
-                                                  name_d["h"] == 10]
-    srf_20 = [Sentences(c) for name_d, c in srf_samples if name_d["n"] == n and 
-                                                  name_d["h"] == 20]
-    srf_30 = [Sentences(c) for name_d, c in srf_samples if name_d["n"] == n and 
-                                                  name_d["h"] == 30]
-    #TFs
-    tf_samples = list(corpora_from_pickles(d + "TF", names=["n", "f", "i"]))
-    tf_50 = [Sentences(c) for name_d, c in tf_samples if name_d["n"] == n and 
-                                                  name_d["f"] == 50]  
-    tf_100 = [Sentences(c) for name_d, c in tf_samples if name_d["n"] == n and 
-                                                  name_d["f"] == 100]    
-    #UNIs
-    uni_samples = corpora_from_pickles(d + "UNI", names=["n", "i"])
-    uni = [Sentences(c) for name_d, c in uni_samples if name_d["n"] == n]
+    args = p.parse_args()
+    return args.lang, args.factors, args.hist_lens
+
+
+def get_filters(filter_dir, k, names, param_name, param_ls):
+    filters_dict = {}
+    
+    for param in param_ls:
+        all_samples = corpora_from_pickles(filter_dir, names=names)
+        cur_param_filters = [Sentences(c) for name_d, c in all_samples if 
+                             name_d["k"] == k and name_d[param_name] == param]
+        filters_dict[param] = cur_param_filters
+        
+    return filters_dict
+
+def len_dists_main(tfs, srfs, unis, results_d):
+    word_lim = 25
+    sent_lim = 50
+    
+    factors = sorted(tfs.keys())
+    hist_lens = sorted(srfs.keys())
+    
+
+    mean_std_table(tfs, srfs, unis, level="word", upper_lim=word_lim,
+                   save_dir=results_d)
+
+    mean_std_table(tfs, srfs, unis, level="sentence", upper_lim=sent_lim,
+                   save_dir=results_d)
     
     
-    subcorp_sets = [srf_10, srf_20, srf_30, tf_50, tf_100, uni]
-    names = ["SRF10", "SRF20", "SRF30", "TF50", "TF100", "UNI"]
+    highest_two_factors = factors[-2:]
+    two_tfs = {k: tfs[k] for k in highest_two_factors}
+    highest_two_hist_lens = hist_lens[-2:]
+    two_srfs = {k: srfs[k] for k in highest_two_hist_lens}
+    
+    plot_dist(two_tfs, two_srfs, unis, level="word", upper_lim=word_lim, 
+              save_dir=results_d)
+    
+    plot_dist(two_tfs, two_srfs, unis, level="sentence", upper_lim=sent_lim, 
+              save_dir=results_d)
     
     
-    main(subcorp_sets, names)
+    
+    
+#    print("Word len: Kruskal all", 
+#          kruskal(get_lens(tfs[max(factors)], level="word", upper_lim=word_lim),
+#                  get_lens(srfs[max(hist_lens)], level="word", upper_lim=word_lim),
+#                  get_lens(unis, level="word", upper_lim=word_lim)))
+#    
+#    print("Word len: Levene all", 
+#          levene(get_lens(tfs[max(factors)], level="word", upper_lim=word_lim),
+#                  get_lens(srfs[max(hist_lens)], level="word", upper_lim=word_lim),
+#                  get_lens(unis, level="word", upper_lim=word_lim)))
     

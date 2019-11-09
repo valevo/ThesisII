@@ -30,17 +30,7 @@ def get_greater_lims(lims1, lims2):
             (min(ylo1, ylo2), max(yhi1, yhi2)),)
     
 
-def get_filters(filter_dir, k, names, param_name, param_ls):
-    filters_dict = {}
-    
-    for param in param_ls:
-        all_samples = corpora_from_pickles(filter_dir, names=names)
-        cur_param_filters = [Sentences(c) for name_d, c in all_samples if 
-                             name_d["k"] == k and name_d[param_name] == param]
-        
-        filters_dict[param] = cur_param_filters
-        
-    return filters_dict
+
         
 
 def mean_rank_freq_from_samples(sample_ls):
@@ -154,16 +144,28 @@ def typicality_distributions(tf_dict, srf_dict, unis, ref_dist, rank_dict):
     
     uni_typs = samples_to_typicality(unis, ref_dist, rank_dict)
     
+    
+    hist_args = dict(alpha=1.0)
     for param, typs in tf_typ_dict.items():
-        sns.distplot(typs, label="TF " + str(param))
+        sns.distplot(typs, label="TF " + str(param), hist_kws=hist_args)
     
     for param, typs in srf_typ_dict.items():
-        sns.distplot(typs, label="SRF " + str(param))    
+        sns.distplot(typs, label="SRF " + str(param), hist_kws=hist_args)    
         
-    sns.distplot(uni_typs, label="UNIF")
+    sns.distplot(uni_typs, label="UNIF", 
+                 axlabel="$a(C^k; P_{\hat{\alpha}, \hat{\beta}})$", hist_kws=hist_args)
     
     plt.legend()
-    plt.show()
+#    plt.show()
+    
+    tf_mean_std_typ = {param: (np.mean(typs), np.var(typs)**.5)
+                        for param, typs in tf_typ_dict.items()}
+    srf_mean_std_typ = {param: (np.mean(typs), np.var(typs)**.5)
+                        for param, typs in srf_typ_dict.items()}
+    
+    uni_mean_std_typ = np.mean(uni_typs), np.std(uni_typs)
+
+    return tf_mean_std_typ, srf_mean_std_typ, uni_mean_std_typ
 
 
 def do_mles(tf_samples, srf_samples):
@@ -182,7 +184,7 @@ def do_mles(tf_samples, srf_samples):
         tf_mles[param] = mandelbrot
         
     for param, sample_ls in srf_samples.items():
-        print("\n TF", str(param))
+        print("\n SRF", str(param))
         mean_ranks, mean_freqs = mean_rank_freq_from_samples(sample_ls)        
         joints = merge_to_joint(mean_ranks, mean_freqs)
         xs, ys = list(zip(*sorted(joints.values())))    
@@ -195,6 +197,9 @@ def do_mles(tf_samples, srf_samples):
 
     return tf_mles, srf_mles        
     
+
+
+
 import argparse
 
 def parse_args():
@@ -205,6 +210,19 @@ def parse_args():
     
     args = p.parse_args()
     return args.lang, args.factors, args.hist_lens
+
+
+def get_filters(filter_dir, k, names, param_name, param_ls):
+    filters_dict = {}
+    
+    for param in param_ls:
+        all_samples = corpora_from_pickles(filter_dir, names=names)
+        cur_param_filters = [Sentences(c) for name_d, c in all_samples if 
+                             name_d["k"] == k and name_d[param_name] == param]
+        
+        filters_dict[param] = cur_param_filters
+        
+    return filters_dict
 
 
 if __name__ == "__main__":
@@ -218,6 +236,11 @@ if __name__ == "__main__":
     srfs = get_filters(d + "SRF/", k, ["k", "h", "i"], "h", hist_lens)
     tfs = get_filters(d + "TF/", k, ["k", "f", "i"], "f", factors)
 
+    highest_three_factors = factors[-3:]
+    three_tfs = {k: tfs[k] for k in highest_three_factors}
+    highest_three_hist_lens = hist_lens[-3:]
+    three_srfs = {k: srfs[k] for k in highest_three_hist_lens}
+
     unis = [Sentences(c) for _, c in corpora_from_pickles(d + "UNI", names=["k", "i"])]
     
     uni_mean_ranks, uni_mean_freqs = mean_rank_freq_from_samples(unis)
@@ -227,27 +250,29 @@ if __name__ == "__main__":
     print("filters loaded", flush=True)
     
     # within filter comparisons
+    # TF
+    uni_plot_lims = hexbin_plot(uni_xs, uni_ys, label="unif", linewidths=1.0,
+                color="black", edgecolors="black", cmap="gray", alpha=0.5,
+                cbar=False, min_y=1)    
+    plot_lims = within_filter_plots(three_tfs,show=False)
+    plot_lims = get_greater_lims(uni_plot_lims, plot_lims)
+    plt.xlim(plot_lims[0])
+    plt.ylim(plot_lims[1])
+    plt.savefig(results_d + "TF_within_comp_rank_freq.png", dpi=300)
+    plt.close()
+    
+    
     # SRF
     uni_plot_lims = hexbin_plot(uni_xs, uni_ys, label="unif", linewidths=1.0,
                 color="black", edgecolors="black", cmap="gray", alpha=0.5,
                 cbar=False, min_y=1)    
-    plot_lims = within_filter_plots(srfs,show=False)
+    plot_lims = within_filter_plots(three_srfs,show=False)
     plot_lims = get_greater_lims(uni_plot_lims, plot_lims)
     plt.xlim(plot_lims[0])
     plt.ylim(plot_lims[1])
     plt.savefig(results_d + "SRF_within_comp_rank_freq.png", dpi=300)
     plt.close()
 
-    # TF
-    uni_plot_lims = hexbin_plot(uni_xs, uni_ys, label="unif", linewidths=1.0,
-                color="black", edgecolors="black", cmap="gray", alpha=0.5,
-                cbar=False, min_y=1)    
-    plot_lims = within_filter_plots(tfs,show=False)
-    plot_lims = get_greater_lims(uni_plot_lims, plot_lims)
-    plt.xlim(plot_lims[0])
-    plt.ylim(plot_lims[1])
-    plt.savefig(results_d + "TF_within_comp_rank_freq.png", dpi=300)
-    plt.close()
     
     print("compared within", flush=True)
     
@@ -263,10 +288,24 @@ if __name__ == "__main__":
     # typicality distributions
     wiki_iter = wiki_from_pickles("data/" + lang + "_pkl")
     ref_dist, big_mean_ranks = get_reference_dist(wiki_iter)
-    typicality_distributions(tfs, srfs, unis, ref_dist, big_mean_ranks)
+    tf_means, srf_means, uni_mean = typicality_distributions(tfs, srfs, 
+                                                              unis, ref_dist,
+                                                              big_mean_ranks)
     plt.savefig(results_d + "typicality_distribution.png", dpi=300)
     plt.close()
     
+    
+    with open("typicality_mean_stddev.txt", "w") as handle:
+        for param, (mean_typ, std_typ) in tf_means.items():
+            handle.write("\nTF " + str(param))
+            handle.write("\t" + str(mean_typ) + " " + str(std_typ))
+        for param, (mean_typ, std_typ) in srf_means.items():
+            handle.write("\nSRF " + str(param))
+            handle.write("\t" + str(mean_typ) + " " + str(std_typ))
+        handle.write("\nUNI")
+        handle.write("\t"+ str(uni_mean[0]) + " " + str(uni_mean[1]))
+        
+        
     print("typicality distributions done", flush=True)
     
     

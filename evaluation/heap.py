@@ -28,8 +28,8 @@ def sent_subsample(sents, n_toks):
         yield sampled_sent
         n_sampled += len(sampled_sent)
         used.add(cur_ind)
-        
-        
+
+
 def heap(corp, rng):
     vocab_sizes = []
     for ntoks in rng:
@@ -37,114 +37,87 @@ def heap(corp, rng):
         vocab_size = compute_vocab_size(subsample)
         vocab_sizes.append(vocab_size)
     return vocab_sizes
-
-
-
-def vocab_growth_compare(vocab_size_sets, names, rng):
-    for i, (vocab_size_set, name) in enumerate(zip(vocab_size_sets, names)):
-        rand_i = rand.randint(len(vocab_size_set))
-        print(rand_i)
-        v_ns = vocab_size_set[rand_i]
-        heap = Heap(vocab_sizes, rng)
-        heap_fit = heap.fit(start_params=np.asarray([1.0, 1.0]), 
-                                    method="powell", full_output=True)    
-        heap.register_fit(heap_fit)
-        
-        hexbin_plot(rng, v_ns, xlbl="$n$", ylbl="$V(n)$",
-                    log=False, ignore_zeros=False, label=name,
-                    color=colour_palette[i], edgecolors=colour_palette[i],
-                    linewidths=1.0, cbar=(True if i==0 else False))
-    plt.legend(loc="upper left")
-#    plt.savefig(save_dir + "vocab_growth_" + 
-#                str(min(rng)) + "_" + str(max(rng)) + "_" + str(len(rng)) + ".png",
-#                dpi=300)
-    plt.show()
-#    plt.close()    
-
-def heap_param_compare(vocab_size_sets, names, rng):
+  
     
-    for i, (vocab_size_set, name) in enumerate(zip(vocab_size_sets, names)):
-        betas = []
-        for vocab_sizes in vocab_size_set:
-            heap = Heap(vocab_sizes, rng)
-            heap_fit = heap.fit(start_params=np.asarray([1.0, 1.0]), 
-                                    method="powell", full_output=True)    
-            heap.register_fit(heap_fit)
-            betas.append(heap.optim_params[1])
+    
+def mean_growth(samples, rng):
+    print("mean_growth ", len(rng), flush=True)
+    heaps = [heap(s, rng) for s in samples]
+    return np.mean(heaps, axis=0)
+
+    
+def vocab_growth_plot(tf_means, srf_means, uni_mean, rng, save_dir):
+    i = 0
+    for name, sample_dict in zip(["TF ", "SRF "], [tf_means, srf_means]):
+        for param, mean_vs in sample_dict.items():            
+            hexbin_plot(rng, mean_vs, log=False, ignore_zeros=False, 
+                        label=name + str(param),
+                        color=colour_palette[i], edgecolors=colour_palette[i], 
+                        cmap="Blues_r", cbar=(True if i == 0 else False),
+                        gridsize=100, linewidths=0.75)
             
-        sns.distplot(betas, label=name)
-    plt.xlabel("$\tau$")
-    plt.legend()
-    plt.show()
+            i += 1
+    
+    hexbin_plot(rng, uni_mean, xlbl="$n$", ylbl="$V(n)$",
+                log=False, ignore_zeros=False, label=name + str(param),
+                color=colour_palette[i], edgecolors=colour_palette[i], 
+                cmap="Blues_r", cbar = False, gridsize=100, linewidths=0.75)
+    
+    plt.legend(loc="upper left")
+    plt.save_fig(save_dir + "vocab_growth_comparison.png", dpi=300)
+    plt.close()
     
     
-def heap_main(subcorp_sets, names, rng):    
-    vocab_sizes_all = []
+def do_mles(tf_means, srf_means, uni_mean, rng, save_dir):
+    with open(save_dir + "mles_heap.txt", "w") as handle:
+        for param, mean_vs in tf_means.items():
+            heap = Heap(mean_vs, rng)
+            heap_fit = heap.fit(start_params=np.asarray([100000.0, 1.0]), 
+                                method="powell", full_output=True)    
+            heap.register_fit(heap_fit)
+            handle.write("\nTF " + str(param))
+            handle.write(heap.print_result(string=True))
     
-    for subcorp_set, name in zip(subcorp_sets, names):
-        cur_vocab_sizes = []
-        for i, subcorp in enumerate(subcorp_set):
-            voc_sizes = heap(subcorp, rng)
-            cur_vocab_sizes.append(voc_sizes)
-        vocab_sizes_all.append(cur_vocab_sizes)
-        
-    vocab_growth_compare(vocab_sizes_all, names, rng)
+        for param, mean_vs in srf_means.items():
+            heap = Heap(mean_vs, rng)
+            heap_fit = heap.fit(start_params=np.asarray([100000.0, 1.0]), 
+                                method="powell", full_output=True)    
+            heap.register_fit(heap_fit)
+            handle.write("\nSRF " + str(param))
+            handle.write(heap.print_result(string=True))
+            
     
-    heap_param_compare(vocab_sizes_all, names, rng)
-    
-    
-    
+        heap = Heap(uni_mean, rng)
+        heap_fit = heap.fit(start_params=np.asarray([100000.0, 1.0]), 
+                            method="powell", full_output=True)    
+        heap.register_fit(heap_fit)
+        handle.write("\nUNI")
+        handle.write(heap.print_result(string=True))
 
-if __name__ == "__main__":
-    n = 1000000
-    d = "results/ID/"
-    
-    ## LOAD CORPORA
-    # SRFs    
-    srf_samples = list(corpora_from_pickles(d + "SRF", names=["n", "h", "i"]))
-    srf_10 = [Sentences(c) for name_d, c in srf_samples if name_d["n"] == n and 
-                                                  name_d["h"] == 4]
-    srf_20 = [Sentences(c) for name_d, c in srf_samples if name_d["n"] == n and 
-                                                  name_d["h"] == 32]
-    srf_30 = [Sentences(c) for name_d, c in srf_samples if name_d["n"] == n and 
-                                                  name_d["h"] == 81]
-    #TFs
-    tf_samples = list(corpora_from_pickles(d + "TF", names=["n", "f", "i"]))
-    tf_50 = [Sentences(c) for name_d, c in tf_samples if name_d["n"] == n and 
-                                                  name_d["f"] == 2]  
-    tf_100 = [Sentences(c) for name_d, c in tf_samples if name_d["n"] == n and 
-                                                  name_d["f"] == 18]    
-    #UNIs
-    uni_samples = corpora_from_pickles(d + "UNI", names=["n", "i"])
-    uni = [Sentences(c) for name_d, c in uni_samples if name_d["n"] == n]
-    
-    
-    
-    ntoks = list(range(n//1000, n, n//5))
-    
-    for subcorp_set, name, colour in zip([srf_10, srf_20, srf_30, tf_50, tf_100, uni], 
-                                 ["SRF10", "SRF20", "SRF30", "TF50", "TF100", "UNI"],
-                                 ["green", "blue", "brown", "yellow", "red", "purple"]):
-        print()
-        print(name)
-        
-        for i, subcorp in enumerate(subcorp_set):
-        
-#            rand_ind = rand.randint(len(subcorp_set))
-            print(i, end="\t")
-#            
-#            subcorp = subcorp_set[rand_ind]
-#        
-            vocab_sizes = []
-            for n in ntoks:
-                subsample = Sentences(sent_subsample(subcorp, n))
 
-                vcb_len = compute_vocab_size(subsample)
-#                print(vcb_len, end=" ", flush=True)
+def heap_main(tfs, srfs, unis, rng, results_d):
+    factors = sorted(tfs.keys())
+    hist_lens = sorted(srfs.keys())
+    
+    tf_means = {param: mean_growth(samples, rng) for param, samples in tfs.items()}
+    srf_means = {param: mean_growth(samples, rng) for param, samples in srfs.items()}
+    uni_mean = mean_growth(unis, rng)
 
-                vocab_sizes.append(vcb_len)
-            plt.plot(ntoks, vocab_sizes, '--', color=colour, 
-                     label=(name if i == 1 else None))
         
-    plt.legend()
-    plt.show()
+    half_factors = factors[::2]
+    half_tfs = {k: tf_means[k] for k in half_factors}
+    half_hist_lens = hist_lens[-2:]
+    half_srfs = {k: srf_means[k] for k in half_hist_lens}
+
+    do_mles(half_tfs, half_srfs, uni_mean, rng, save_dir=results_d)
+    
+    print("Heap MLEs done", flush=True)
+    
+    highest_two_factors = factors[-2:]
+    two_tfs = {k: tf_means[k] for k in highest_two_factors}
+    highest_two_hist_lens = hist_lens[-2:]
+    two_srfs = {k: srf_means[k] for k in highest_two_hist_lens}
+    
+    vocab_growth_plot(two_tfs, two_srfs, uni_mean, rng, save_dir=results_d)
+    
+    print("growth plots done", flush=True)
