@@ -7,6 +7,8 @@ module load pre2019
 module load Python/3.6.1-intel-2016b 
 
 pip install --user lexical-diversity
+pip install --user tag-fixer
+python3 -c "from lexical_diversity import lex_div; print(lex_div)"
 
 echo "evaluation_main job $PBS_JOBID started at `date`"
 

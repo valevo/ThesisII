@@ -295,7 +295,7 @@ if __name__ == "__main__":
     plt.close()
     
     
-    with open("typicality_mean_stddev.txt", "w") as handle:
+    with open(results_d + "typicality_mean_stddev.txt", "w") as handle:
         for param, (mean_typ, std_typ) in tf_means.items():
             handle.write("\nTF " + str(param))
             handle.write("\t" + str(mean_typ) + " " + str(std_typ))
