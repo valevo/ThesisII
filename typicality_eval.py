@@ -75,7 +75,7 @@ def within_filter_plots(sample_dict, show=True):
         
     
 
-def across_filter_plots(tf_samples, srf_samples, h, f, uni_samples, show=False):
+def across_filter_plots(tf_samples, srf_samples, f, h, uni_samples, show=False):
     tf_mean_ranks, tf_mean_freqs = mean_rank_freq_from_samples(tf_samples)
     srf_mean_ranks, srf_mean_freqs = mean_rank_freq_from_samples(srf_samples)
     uni_mean_ranks, uni_mean_freqs = mean_rank_freq_from_samples(uni_samples)
