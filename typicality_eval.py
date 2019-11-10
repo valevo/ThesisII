@@ -60,9 +60,9 @@ def within_filter_plots(sample_dict, show=True, mle_dict=None):
                     cbar=False)
         if mle_dict and param in mle_dict:
             mandelbrot = mle_dict[param]
-            plot_preds(mandelbrot, np.asarray(xs))
+            plot_preds(mandelbrot, np.asarray(xs), color=colour_palette[i])
 
-        plot_lims = get_greater_lims(plot_lims, cur_plot_lims)
+        plot_lims = get_greater_lims(plot_lims, cur_plot_lims, color=colour_palette[i])
         print(plot_lims)
     
     
