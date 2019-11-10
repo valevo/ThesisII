@@ -64,7 +64,7 @@ def vocab_growth_plot(tf_means, srf_means, uni_mean, rng, save_dir):
                 cmap="Blues_r", cbar = False, gridsize=100, linewidths=1.0)
     
     plt.legend(loc="upper left")
-    plt.save_fig(save_dir + "vocab_growth_comparison.png", dpi=300)
+    plt.savefig(save_dir + "vocab_growth_comparison.png", dpi=300)
     plt.close()
     
     
