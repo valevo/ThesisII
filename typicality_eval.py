@@ -224,14 +224,7 @@ def do_mles(tf_samples, srf_samples, uni_samples):
     uni_mandelbrot.register_fit(uni_mandelbrot_fit)
 
     return tf_mles, srf_mles, uni_mandelbrot   
-
-
-def plot_mles(mle_dict):
-    for param, mandelbrot in mle_dict.items():
-        
-    
-
-
+   
 
 import argparse
 
