@@ -62,7 +62,7 @@ def mean_std_table(tfs, srfs, unis, level="word", upper_lim=np.inf, save_dir="./
     with open(save_dir + "SRF_" + level + "_len_means.txt", "w") as handle:
         for param, (m, s) in get_mean_std(srfs).items():
             handle.write(str(param) + "\t")
-            handle.write(str(round(m, 3) + " " + str(round(s, 3))))
+            handle.write(str(round(m, 3)) + " " + str(round(s, 3)))
             
     with open(save_dir + "UNI_" + level + "_len_means.txt", "w") as handle:
         uni_lens = get_lens(unis, level=level, upper_lim=upper_lim)

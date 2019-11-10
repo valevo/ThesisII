@@ -1,14 +1,32 @@
 # -*- coding: utf-8 -*-
 
-from data.reader import corpora_from_pickles
+from data.reader import wiki_from_pickles, corpora_from_pickles
 from data.corpus import Sentences
 
-from evaluation.lex_diversity import lex_div_main
-from evaluation.len_dists import len_dists_main
-from evaluation.heap import heap_main
 
+from lexical_diversity import lex_div
 
+import matplotlib.pyplot as plt
+import seaborn as sns
+    
+    
+def lex_div_dist_plots(tfs, srfs, unis, div_f, save_dir):
+    hist_args = dict(alpha=1.0)
+    for param, samples in tfs.items():
+        div_vals = [div_f(list(s.tokens())) for s in samples]
+        sns.distplot(div_vals, label="TF " + str(param), hist_kws=hist_args)
+    
+    for param, samples in srfs.items():
+        div_vals = [div_f(list(s.tokens())) for s in samples]
+        sns.distplot(div_vals, label="SRF " + str(param), hist_kws=hist_args)
+        
+    sns.distplot([div_f(list(s.tokens())) for s in unis], label="UNIF",
+                  axlabel=div_f.__name__, hist_kws=hist_args)
+    
+    plt.savefig(save_dir + div_f.__name__ + "dist_plot.png", dpi=300)
+    plt.close()
 
+    
 import argparse
 
 def parse_args():
@@ -32,7 +50,7 @@ def get_filters(filter_dir, k, names, param_name, param_ls):
         
     return filters_dict
 
-if __name__ == "__main__":
+if __name__ == "__main__":    
     lang, factors, hist_lens = parse_args()
     print("ARGS: ", lang, factors, hist_lens, "\n")
     d =  "results/" + lang + "/"
@@ -45,19 +63,14 @@ if __name__ == "__main__":
     unis = [Sentences(c) for _, c in corpora_from_pickles(d + "UNI", names=["k", "i"])]
     
     
-    # LEN DISTS
-    len_dists_main(tfs, srfs, unis, results_d)
+    half_factors = factors[::2]
+    half_tfs = {k: tfs[k] for k in half_factors}
+    half_hist_lens = hist_lens[-2:]
+    half_srfs = {k: srfs[k] for k in half_hist_lens}
     
-    print("len dists done")
+    lex_div_dist_plots(tfs, srfs, unis, lex_div.mtld, save_dir=results_d)
     
-    # HEAP
-    rng = list(range(0, k, k//100))
-    heap_main(tfs, srfs, unis, rng, results_d)
     
-    print("heap_main done")
     
-    # LEX DIV
-    lex_div_main(tfs, srfs, unis, results_d)
-    
-    print("lex div done")
+
     

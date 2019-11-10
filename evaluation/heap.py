@@ -106,7 +106,7 @@ def heap_main(tfs, srfs, unis, rng, results_d):
         
     half_factors = factors[::2]
     half_tfs = {k: tf_means[k] for k in half_factors}
-    half_hist_lens = hist_lens[-2:]
+    half_hist_lens = hist_lens[::2]
     half_srfs = {k: srf_means[k] for k in half_hist_lens}
 
     do_mles(half_tfs, half_srfs, uni_mean, rng, save_dir=results_d)

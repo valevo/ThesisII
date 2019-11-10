@@ -29,10 +29,7 @@ def get_greater_lims(lims1, lims2):
     return ((min(xlo1, xlo2), max(xhi1, xhi2)),
             (min(ylo1, ylo2), max(yhi1, yhi2)),)
     
-
-
-        
-
+    
 def mean_rank_freq_from_samples(sample_ls):
     rand_perm = np.random.permutation(sample_ls)
     half = len(sample_ls) // 2
@@ -89,7 +86,7 @@ def across_filter_plots(tf_samples, srf_samples, f, h, uni_samples, show=False):
     joints = merge_to_joint(*uni_mean_rf)
     xs, ys = list(zip(*sorted(joints.values()))) 
         
-    cur_plot_lims = hexbin_plot(xs, ys, 
+    cur_plot_lims = hexbin_plot(xs, ys, xlbl="$\log$ $r(w)$", ylbl="$\log$ $f(w)$",
                                 label="UNIF", 
                                 color="black",
                                 edgecolors="black",

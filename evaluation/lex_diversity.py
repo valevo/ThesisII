@@ -6,67 +6,84 @@ from data.corpus import Sentences
 
 from lexical_diversity import lex_div
 
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-
-def mtld_dists(subcorp_sets, names):
-    for subcorp_set, name in zip(subcorp_sets, names):
-        mtlds = [lex_div.mtld(list(subcorp.tokens())) for subcorp in subcorp_set]
+    
+    
+def lex_div_dist_plots(tfs, srfs, unis, div_f, save_dir):
+    hist_args = dict(alpha=1.0)
+    for param, div_vals in tfs.items():
+        sns.distplot(div_vals, label="TF " + str(param), hist_kws=hist_args)
+    
+    for param, div_vals in srfs.items():
+        sns.distplot(div_vals, label="SRF " + str(param), hist_kws=hist_args)
         
-        sns.distplot(mtlds, label=name)
-        print(name)
-        
-    plt.xlabel("MTLD")
-    plt.legend()
-    plt.show()
+    sns.distplot(unis, label="UNIF", axlabel=div_f.__name__, hist_kws=hist_args)
     
+    plt.savefig(save_dir + div_f.__name__ + "_dist_plot.png", dpi=300)
+    plt.close()
     
-def hdd_dists(subcorp_sets, names):
-    for subcorp_set, name in zip(subcorp_sets, names):
-        mtlds = [lex_div.hdd(list(subcorp.tokens())) for subcorp in subcorp_set]
-        
-        sns.distplot(mtlds, label=name)
-        print(name)
-        
-    plt.xlim(0.5, 1.0)
-    plt.xlabel("HD-D")
-    plt.legend()
-    plt.show()
-
-
-def main(subcorp_sets, names):
-    mtld_dists(subcorp_sets, names)
-    hdd_dists(subcorp_sets, names)
-    
+def lex_div_means(tfs, srfs, unis, div_f, save_dir):
+    with open(save_dir + div_f.__name__ + "_means.txt", "w") as handle:
+        for param, lex_div_ls in tfs.items():
+            handle.write("TF " + str(param) + "\t")
+            handle.write(str(np.mean(lex_div_ls).round(3)))
+            handle.write("\t" + str(np.sqrt(np.var(lex_div_ls)).round(3)))
+        for param, lex_div_ls in srfs.items():
+            handle.write("SRF " + str(param) + "\t")
+            handle.write(str(np.mean(lex_div_ls).round(3)))
+            handle.write("\t" + str(np.sqrt(np.var(lex_div_ls)).round(3)))
+            
+        handle.write("UNIF " + "\t")
+        handle.write(str(np.mean(unis).round(3)))
+        handle.write("\t" + str(np.sqrt(np.var(unis)).round(3))) 
+            
     
 
-if __name__ == "__main__":    
-    n = 100000
-    d = "results/ALS/"
+    
+import argparse
+
+def parse_args():
+    p = argparse.ArgumentParser()
+    p.add_argument("--lang", type=str)
+    p.add_argument("--factors", nargs="*", type=int, default=[])
+    p.add_argument("--hist_lens", nargs="*", type=int, default=[])
+    
+    args = p.parse_args()
+    return args.lang, args.factors, args.hist_lens
+
+
+def get_filters(filter_dir, k, names, param_name, param_ls):
+    filters_dict = {}
+    
+    for param in param_ls:
+        all_samples = corpora_from_pickles(filter_dir, names=names)
+        cur_param_filters = [Sentences(c) for name_d, c in all_samples if 
+                             name_d["k"] == k and name_d[param_name] == param]
+        filters_dict[param] = cur_param_filters
+        
+    return filters_dict
+
+def lex_div_main(tfs, srfs, unis, results_d):
+    factors = sorted(tfs.keys())
+    hist_lens = sorted(srfs.keys())
+    half_factors = factors[::2]
+    half_tfs = {k: tfs[k] for k in half_factors}
+    half_hist_lens = hist_lens[::2]
+    half_srfs = {k: srfs[k] for k in half_hist_lens}
     
     
-    ## LOAD CORPORA
-    # SRFs    
-    srf_samples = list(corpora_from_pickles(d + "SRF", names=["n", "h", "i"]))
-    srf_10 = [Sentences(c) for name_d, c in srf_samples if name_d["n"] == n and 
-                                                  name_d["h"] == 10]
-    srf_20 = [Sentences(c) for name_d, c in srf_samples if name_d["n"] == n and 
-                                                  name_d["h"] == 20]
-    srf_30 = [Sentences(c) for name_d, c in srf_samples if name_d["n"] == n and 
-                                                  name_d["h"] == 30]
-    #TFs
-    tf_samples = list(corpora_from_pickles(d + "TF", names=["n", "f", "i"]))
-    tf_50 = [Sentences(c) for name_d, c in tf_samples if name_d["n"] == n and 
-                                                  name_d["f"] == 50]  
-    tf_100 = [Sentences(c) for name_d, c in tf_samples if name_d["n"] == n and 
-                                                  name_d["f"] == 100]    
-    #UNIs
-    uni_samples = corpora_from_pickles(d + "UNI", names=["n", "i"])
-    uni = [Sentences(c) for name_d, c in uni_samples if name_d["n"] == n]
+    for div_f in [lex_div.mtld, lex_div.hdd]:
+        print("\nlex div with " + div_f.__name__)
+    
+        tf_mtlds = {param: [div_f(list(s.tokens())) for s in samples]
+                    for param, samples in half_tfs.items()}
+        srf_mtlds = {param: [div_f(list(s.tokens())) for s in samples]
+                    for param, samples in half_srfs.items()}
+        uni_mtlds = [div_f(list(s.tokens())) for s in unis]
+        
+        lex_div_dist_plots(tf_mtlds, srf_mtlds, uni_mtlds, div_f, save_dir=results_d)
+        lex_div_means(tf_mtlds, srf_mtlds, uni_mtlds, save_dir=results_d)
     
     
-    subcorp_sets = [srf_10, srf_20, srf_30, tf_50, tf_100, uni]
-    names = ["SRF10", "SRF20", "SRF30", "TF50", "TF100", "UNI"]
-  
-    
-    main(subcorp_sets, names)
