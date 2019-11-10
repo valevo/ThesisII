@@ -10,7 +10,7 @@ from stats.stat_functions import compute_ranks, compute_freqs,\
 from stats.mle import Mandelbrot                            
 from stats.entropy import typicality
 
-from jackknife.plotting import hexbin_plot, colour_palette
+from jackknife.plotting import hexbin_plot, colour_palette, plot_preds
 
 
 import numpy as np
@@ -45,7 +45,7 @@ def mean_rank_freq_from_samples(sample_ls):
     return mean_ranks, mean_freqs
 
 
-def within_filter_plots(sample_dict, show=True):
+def within_filter_plots(sample_dict, show=True, mle_dict=None):
     plot_lims = None
     for i, (param, sample_ls) in enumerate(sample_dict.items()):
         mean_ranks, mean_freqs = mean_rank_freq_from_samples(sample_ls)
@@ -58,6 +58,10 @@ def within_filter_plots(sample_dict, show=True):
                     color=colour_palette[i], edgecolors=colour_palette[i],
                     linewidths=1.0, lims=None, min_y=1,
                     cbar=False)
+        if mle_dict and param in mle_dict:
+            mandelbrot = mle_dict[param]
+            plot_preds(mandelbrot, np.asarray(xs))
+
         plot_lims = get_greater_lims(plot_lims, cur_plot_lims)
         print(plot_lims)
     
@@ -184,7 +188,7 @@ def typicality_distributions(tf_dict, srf_dict, unis, ref_dist, rank_dict):
     return tf_mean_std_typ, srf_mean_std_typ, uni_mean_std_typ
 
 
-def do_mles(tf_samples, srf_samples):
+def do_mles(tf_samples, srf_samples, uni_samples):
     tf_mles = {}
     srf_mles = {}
     for param, sample_ls in tf_samples.items():
@@ -210,8 +214,21 @@ def do_mles(tf_samples, srf_samples):
         mandelbrot.register_fit(mandelbrot_fit)
 #        mandelbrot.print_result()
         srf_mles[param] = mandelbrot
+        
+    uni_mean_ranks, uni_mean_freqs = mean_rank_freq_from_samples(uni_samples)
+    uni_joints = merge_to_joint(uni_mean_ranks, uni_mean_freqs)
+    uni_xs, uni_ys = list(zip(*sorted(uni_joints.values())))
+    uni_mandelbrot = Mandelbrot(uni_ys, uni_xs)
+    uni_mandelbrot_fit = uni_mandelbrot.fit(start_params=np.asarray([1.0, 1.0]), 
+                                    method="powell", full_output=True)    
+    uni_mandelbrot.register_fit(uni_mandelbrot_fit)
 
-    return tf_mles, srf_mles        
+    return tf_mles, srf_mles, uni_mandelbrot   
+
+
+def plot_mles(mle_dict):
+    for param, mandelbrot in mle_dict.items():
+        
     
 
 
@@ -265,6 +282,31 @@ if __name__ == "__main__":
 
     print("filters loaded", flush=True)
     
+    
+    
+    # MLEs
+    tf_mles, srf_mles, uni_mle = do_mles(tfs, srfs)
+    
+    with open(results_d + "mle_mandelbrot.txt", "w") as handle:
+        for param, mandel in tf_mles.items():
+            handle.write("TF " + str(param))
+            handle.write("\n")
+            handle.write(mandel.print_result(string=True))
+            handle.write("\n\n")
+        for param, mandel in srf_mles.items():
+            handle.write("SRF " + str(param))
+            handle.write("\n")
+            handle.write(mandel.print_result(string=True))
+            handle.write("\n\n")
+
+        handle.write("\nUNI\n")
+        handle.write(mandel.print_result(string=True))
+        handle.write("\n\n")
+
+    print("MLEs done")
+    
+    
+    
     # within filter comparisons
     # TF
     uni_plot_lims = hexbin_plot(uni_xs, uni_ys, label="UNIF", linewidths=1.0,
@@ -288,6 +330,31 @@ if __name__ == "__main__":
     plt.ylim(plot_lims[1])
     plt.savefig(results_d + "SRF_within_comp_rank_freq.png", dpi=300)
     plt.close()
+    
+    
+    # within filter comparisons WITH MLEs
+    # TF
+    uni_plot_lims = hexbin_plot(uni_xs, uni_ys, label="UNIF", linewidths=1.0,
+                color="black", edgecolors="black", cmap="gray", alpha=0.5,
+                cbar=True, min_y=1)    
+    plot_lims = within_filter_plots(three_tfs, show=False, mle_dict=tf_mles)
+    plot_lims = get_greater_lims(uni_plot_lims, plot_lims)
+    plt.xlim(plot_lims[0])
+    plt.ylim(plot_lims[1])
+    plt.savefig(results_d + "TF_within_comp_rank_freq_MLE.png", dpi=300)
+    plt.close()
+    
+    # SRF
+    uni_plot_lims = hexbin_plot(uni_xs, uni_ys, label="UNIF", linewidths=1.0,
+                color="black", edgecolors="black", cmap="gray", alpha=0.5,
+                cbar=True, min_y=1)    
+    plot_lims = within_filter_plots(three_srfs, show=False, mle_dict=srf_mles)
+    plot_lims = get_greater_lims(uni_plot_lims, plot_lims)
+    plt.xlim(plot_lims[0])
+    plt.ylim(plot_lims[1])
+    plt.savefig(results_d + "SRF_within_comp_rank_freq_MLE.png", dpi=300)
+    plt.close()
+    
 
     
     print("compared within", flush=True)
@@ -323,21 +390,3 @@ if __name__ == "__main__":
         
         
     print("typicality distributions done", flush=True)
-    
-    
-    # MLEs
-    tf_mles, srf_mles = do_mles(tfs, srfs)
-    
-    with open(results_d + "mle_mandelbrot_tfs.txt", "w") as handle:
-        for param, mandel in tf_mles.items():
-            handle.write(str(param))
-            handle.write("\n")
-            handle.write(mandel.print_result(string=True))
-            handle.write("\n\n")
-            
-    with open(results_d + "mle_mandelbrot_srfs.txt", "w") as handle:
-        for param, mandel in srf_mles.items():
-            handle.write(str(param))
-            handle.write("\n")
-            handle.write(mandel.print_result(string=True))
-            handle.write("\n\n")
