@@ -68,9 +68,9 @@ def get_filters(filter_dir, k, names, param_name, param_ls):
 def lex_div_main(tfs, srfs, unis, results_d):
     factors = sorted(tfs.keys())
     hist_lens = sorted(srfs.keys())
-    half_factors = factors[::2]
+    half_factors = factors[1::2]
     half_tfs = {k: tfs[k] for k in half_factors}
-    half_hist_lens = hist_lens[::2]
+    half_hist_lens = hist_lens[1::2]
     half_srfs = {k: srfs[k] for k in half_hist_lens}
     
     

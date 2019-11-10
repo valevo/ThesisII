@@ -54,21 +54,20 @@ def get_mean_std(sample_dict, level="word", upper_lim=np.inf):
 
 
 def mean_std_table(tfs, srfs, unis, level="word", upper_lim=np.inf, save_dir="./"):
-    with open(save_dir + "TF_" + level + "_len_means.txt", "w") as handle:
+    with open(save_dir + level + "_len_means.txt", "w") as handle:
         for param, (m, s) in get_mean_std(tfs).items():
-            handle.write(str(param) + "\t")
-            handle.write(str(round(m, 3)) + " " + str(round(s, 3)))
-            
-    with open(save_dir + "SRF_" + level + "_len_means.txt", "w") as handle:
+            handle.write("TF " + str(param) + "\t")
+            handle.write(str(round(m, 3)) + "\t" + str(round(s, 3)))
+            handle.write("\n")
         for param, (m, s) in get_mean_std(srfs).items():
-            handle.write(str(param) + "\t")
-            handle.write(str(round(m, 3)) + " " + str(round(s, 3)))
-            
-    with open(save_dir + "UNI_" + level + "_len_means.txt", "w") as handle:
+            handle.write("SRF " + str(param) + "\t")
+            handle.write(str(round(m, 3)) + "\t" + str(round(s, 3)))
+            handle.write("\n")
+        
         uni_lens = get_lens(unis, level=level, upper_lim=upper_lim)
         m, s = np.mean(uni_lens), np.var(uni_lens)**.5
-        handle.write("\t")
-        handle.write(str(round(m, 3)) + " " + str(round(s, 3)))
+        handle.write("UNIF \t")
+        handle.write(str(round(m, 3)) + "\t" + str(round(s, 3)))
         
     
     

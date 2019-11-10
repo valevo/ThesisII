@@ -57,7 +57,7 @@ def within_filter_plots(sample_dict, show=True):
                     xlbl="$\log$ $r(w)$", ylbl="$\log$ $f(w)$", label=str(param), 
                     color=colour_palette[i], edgecolors=colour_palette[i],
                     linewidths=1.0, lims=None, min_y=1,
-                    cbar=(True if i == 0 else False))
+                    cbar=False)
         plot_lims = get_greater_lims(plot_lims, cur_plot_lims)
         print(plot_lims)
     
@@ -269,7 +269,7 @@ if __name__ == "__main__":
     # TF
     uni_plot_lims = hexbin_plot(uni_xs, uni_ys, label="UNIF", linewidths=1.0,
                 color="black", edgecolors="black", cmap="gray", alpha=0.5,
-                cbar=False, min_y=1)    
+                cbar=True, min_y=1)    
     plot_lims = within_filter_plots(three_tfs,show=False)
     plot_lims = get_greater_lims(uni_plot_lims, plot_lims)
     plt.xlim(plot_lims[0])
@@ -281,7 +281,7 @@ if __name__ == "__main__":
     # SRF
     uni_plot_lims = hexbin_plot(uni_xs, uni_ys, label="UNIF", linewidths=1.0,
                 color="black", edgecolors="black", cmap="gray", alpha=0.5,
-                cbar=False, min_y=1)    
+                cbar=True, min_y=1)    
     plot_lims = within_filter_plots(three_srfs,show=False)
     plot_lims = get_greater_lims(uni_plot_lims, plot_lims)
     plt.xlim(plot_lims[0])
@@ -304,7 +304,7 @@ if __name__ == "__main__":
     # typicality distributions
     wiki_iter = wiki_from_pickles("data/" + lang + "_pkl")
     ref_dist, big_mean_ranks = get_reference_dist(wiki_iter)
-    tf_means, srf_means, uni_mean = typicality_distributions(tfs, srfs, 
+    tf_means, srf_means, (uni_mean, uni_std) = typicality_distributions(tfs, srfs, 
                                                               unis, ref_dist,
                                                               big_mean_ranks)
     plt.savefig(results_d + "typicality_distribution.png", dpi=300)
@@ -314,12 +314,12 @@ if __name__ == "__main__":
     with open(results_d + "typicality_mean_stddev.txt", "w") as handle:
         for param, (mean_typ, std_typ) in tf_means.items():
             handle.write("\nTF " + str(param))
-            handle.write("\t" + str(mean_typ) + " " + str(std_typ))
+            handle.write("\t" + str(round(mean_typ, 3)) + "\t" + str(round(std_typ, 3)))
         for param, (mean_typ, std_typ) in srf_means.items():
             handle.write("\nSRF " + str(param))
-            handle.write("\t" + str(mean_typ) + " " + str(std_typ))
+            handle.write("\t" + str(round(mean_typ, 3)) + "\t" + str(round(std_typ, 3)))
         handle.write("\nUNI")
-        handle.write("\t"+ str(uni_mean[0]) + " " + str(uni_mean[1]))
+        handle.write("\t"+ str(round(uni_mean, 3)) + "\t" + str(round(uni_std, 3)))
         
         
     print("typicality distributions done", flush=True)
