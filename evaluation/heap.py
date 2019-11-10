@@ -54,14 +54,14 @@ def vocab_growth_plot(tf_means, srf_means, uni_mean, rng, save_dir):
                         label=name + str(param),
                         color=colour_palette[i], edgecolors=colour_palette[i], 
                         cmap="Blues_r", cbar=(True if i == 0 else False),
-                        gridsize=100, linewidths=0.75)
+                        gridsize=100, linewidths=1.0)
             
             i += 1
     
     hexbin_plot(rng, uni_mean, xlbl="$n$", ylbl="$V(n)$",
                 log=False, ignore_zeros=False, label=name + str(param),
                 color=colour_palette[i], edgecolors=colour_palette[i], 
-                cmap="Blues_r", cbar = False, gridsize=100, linewidths=0.75)
+                cmap="Blues_r", cbar = False, gridsize=100, linewidths=1.0)
     
     plt.legend(loc="upper left")
     plt.save_fig(save_dir + "vocab_growth_comparison.png", dpi=300)

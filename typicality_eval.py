@@ -83,23 +83,42 @@ def across_filter_plots(tf_samples, srf_samples, f, h, uni_samples, show=False):
     tf_mean_rf = mean_rank_freq_from_samples(tf_samples)
     srf_mean_rf = mean_rank_freq_from_samples(srf_samples)
     uni_mean_rf = mean_rank_freq_from_samples(uni_samples)
-    
-    names = ["TF " + str(f), "SRF " + str(h), "UNIF"]
-    
-    plot_lims = None
-    for i, (name, (mean_ranks, mean_freqs)) in enumerate(zip(names,
-            [tf_mean_rf, srf_mean_rf, uni_mean_rf])):
-        joints = merge_to_joint(mean_ranks, mean_freqs)
-        xs, ys = list(zip(*sorted(joints.values()))) 
         
-        cur_plot_lims = hexbin_plot(xs, ys, 
-                                xlbl="$\log$ $r(w)$", ylbl="$\log$ $f(w)$",
-                                label=name, 
-                                color=colour_palette[i],
-                                edgecolors=colour_palette[i],
-                                linewidths=1.5, lims=None, min_y=1,
-                                cbar=(True if i == 0 else False))
-        plot_lims = get_greater_lims(plot_lims, cur_plot_lims)
+    plot_lims = None
+    
+    joints = merge_to_joint(*uni_mean_rf)
+    xs, ys = list(zip(*sorted(joints.values()))) 
+        
+    cur_plot_lims = hexbin_plot(xs, ys, 
+                                label="UNIF", 
+                                color="black",
+                                edgecolors="black",
+                                cmap="gray",
+                                linewidths=1.0, lims=None, min_y=1, cbar=True)
+    plot_lims = get_greater_lims(plot_lims, cur_plot_lims)
+    
+    
+    joints = merge_to_joint(*tf_mean_rf)
+    xs, ys = list(zip(*sorted(joints.values()))) 
+        
+    cur_plot_lims = hexbin_plot(xs, ys, 
+                                label="TF " + str(f), 
+                                color=colour_palette[0],
+                                edgecolors=colour_palette[0],
+                                linewidths=1.0, lims=None, min_y=1, cbar=False)
+    plot_lims = get_greater_lims(plot_lims, cur_plot_lims)
+    
+    
+    joints = merge_to_joint(*srf_mean_rf)
+    xs, ys = list(zip(*sorted(joints.values()))) 
+        
+    cur_plot_lims = hexbin_plot(xs, ys, 
+                                label="SRF " + str(h), 
+                                color=colour_palette[1],
+                                edgecolors=colour_palette[1],
+                                linewidths=1.0, lims=None, min_y=1, cbar=False)
+    plot_lims = get_greater_lims(plot_lims, cur_plot_lims)
+    
         
     plt.xlim(plot_lims[0])
     plt.ylim(plot_lims[1])
@@ -251,7 +270,7 @@ if __name__ == "__main__":
     
     # within filter comparisons
     # TF
-    uni_plot_lims = hexbin_plot(uni_xs, uni_ys, label="unif", linewidths=1.0,
+    uni_plot_lims = hexbin_plot(uni_xs, uni_ys, label="UNIF", linewidths=1.0,
                 color="black", edgecolors="black", cmap="gray", alpha=0.5,
                 cbar=False, min_y=1)    
     plot_lims = within_filter_plots(three_tfs,show=False)
@@ -263,7 +282,7 @@ if __name__ == "__main__":
     
     
     # SRF
-    uni_plot_lims = hexbin_plot(uni_xs, uni_ys, label="unif", linewidths=1.0,
+    uni_plot_lims = hexbin_plot(uni_xs, uni_ys, label="UNIF", linewidths=1.0,
                 color="black", edgecolors="black", cmap="gray", alpha=0.5,
                 cbar=False, min_y=1)    
     plot_lims = within_filter_plots(three_srfs,show=False)

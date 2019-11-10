@@ -4,7 +4,7 @@ from data.reader import corpora_from_pickles
 from data.corpus import Sentences
 
 from evaluation.lex_diversity import main as lex_main
-from evaluation.len_dists import main as len_dists_main
+from evaluation.len_dists import len_dists_main
 from evaluation.heap import heap_main
 
 
