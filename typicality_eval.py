@@ -27,7 +27,7 @@ def get_greater_lims(lims1, lims2):
     (xlo1, xhi1), (xlo2, xhi2) = lims1[0], lims2[0]
     (ylo1, yhi1), (ylo2, yhi2)= lims1[1], lims2[1]
     return ((min(xlo1, xlo2), max(xhi1, xhi2)),
-            (min(ylo1, ylo2), max(yhi1, yhi2)),)
+            (min(ylo1, ylo2), max(yhi1, yhi2)))
     
     
 def mean_rank_freq_from_samples(sample_ls):
@@ -278,7 +278,7 @@ if __name__ == "__main__":
     
     
     # MLEs
-    tf_mles, srf_mles, uni_mle = do_mles(tfs, srfs)
+    tf_mles, srf_mles, uni_mle = do_mles(tfs, srfs, unis)
     
     with open(results_d + "mle_mandelbrot.txt", "w") as handle:
         for param, mandel in tf_mles.items():

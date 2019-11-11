@@ -14,6 +14,16 @@ import numpy.random as rand
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+
+def get_greater_lims(lims1, lims2):
+    if lims1 is None:
+        return lims2
+    (xlo1, xhi1), (xlo2, xhi2) = lims1[0], lims2[0]
+    (ylo1, yhi1), (ylo2, yhi2)= lims1[1], lims2[1]
+    return ((min(xlo1, xlo2), max(xhi1, xhi2)),
+            (min(ylo1, ylo2), max(yhi1, yhi2)))
+
+
 def sent_subsample(sents, n_toks):
     n_sampled = 0
     
@@ -48,20 +58,28 @@ def mean_growth(samples, rng):
     
 def vocab_growth_plot(tf_means, srf_means, uni_mean, rng, save_dir):
     i = 0
+    plot_lims = None
     for name, sample_dict in zip(["TF ", "SRF "], [tf_means, srf_means]):
         for param, mean_vs in sample_dict.items():            
-            hexbin_plot(rng, mean_vs, log=False, ignore_zeros=False, 
-                        label=name + str(param),
-                        color=colour_palette[i], edgecolors=colour_palette[i], 
-                        cmap="Blues_r", cbar=False,
-                        gridsize=100, linewidths=1.0)
+            cur_plot_lims = hexbin_plot(rng, mean_vs, log=False, 
+                                        ignore_zeros=False, 
+                                        label=name + str(param),
+                                        color=colour_palette[i],
+                                        edgecolors=colour_palette[i], 
+                                        cmap="Blues_r", cbar=False,
+                                        gridsize=100, linewidths=1.0)
             
+            plot_lims = get_greater_lims(plot_lims, cur_plot_lims)
             i += 1
     
-    hexbin_plot(rng, uni_mean, xlbl="$n$", ylbl="$V(n)$",
-                log=False, ignore_zeros=False, label="UNIF",
-                color="black", edgecolors="black", cmap="gray", cbar = True, gridsize=100, linewidths=1.0)
+    cur_plot_lims = hexbin_plot(rng, uni_mean, xlbl="$n$", ylbl="$V(n)$",
+                                log=False, ignore_zeros=False, label="UNIF",
+                                color="black", edgecolors="black", cmap="gray",
+                                cbar=True, gridsize=100, linewidths=1.0)
+    plot_lims = get_greater_lims(plot_lims, cur_plot_lims)
     
+    plt.xlim(plot_lims[0])
+    plt.ylim(plot_lims[1])
     plt.legend(loc="lower right")
     plt.savefig(save_dir + "vocab_growth_comparison.png", dpi=300)
     plt.close()
@@ -70,24 +88,27 @@ def vocab_growth_plot(tf_means, srf_means, uni_mean, rng, save_dir):
 def do_mles(tf_means, srf_means, uni_mean, rng, save_dir):
     with open(save_dir + "mle_heap_all.txt", "w") as handle:
         for param, mean_vs in tf_means.items():
-            heap = Heap(mean_vs, rng)
-            heap_fit = heap.fit(start_params=np.asarray([100000.0, 1.0]), 
+            means_floored = np.floor(mean_vs).astype("int")
+            heap = Heap(means_floored, rng)
+            heap_fit = heap.fit(start_params=np.asarray([100000.0, 0.5]), 
                                 method="powell", full_output=True)    
             heap.register_fit(heap_fit)
             handle.write("\n\nTF " + str(param))
             handle.write("\n" + heap.print_result(string=True))
     
         for param, mean_vs in srf_means.items():
-            heap = Heap(mean_vs, rng)
-            heap_fit = heap.fit(start_params=np.asarray([100000.0, 1.0]), 
+            means_floored = np.floor(mean_vs).astype("int")
+            heap = Heap(means_floored, rng)
+            heap_fit = heap.fit(start_params=np.asarray([100000.0, 0.5]), 
                                 method="powell", full_output=True)    
             heap.register_fit(heap_fit)
             handle.write("\n\nSRF " + str(param))
             handle.write("\n" + heap.print_result(string=True))
             
     
-        heap = Heap(uni_mean, rng)
-        heap_fit = heap.fit(start_params=np.asarray([100000.0, 1.0]), 
+        uni_mean_floored = np.floor(uni_mean).astype("int")
+        heap = Heap(uni_mean_floored, rng)
+        heap_fit = heap.fit(start_params=np.asarray([100000.0, 0.5]), 
                             method="powell", full_output=True)    
         heap.register_fit(heap_fit)
         handle.write("\n\nUNI\n")
