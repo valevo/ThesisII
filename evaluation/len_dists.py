@@ -67,7 +67,7 @@ def mean_std_table(tfs, srfs, unis, level="word", upper_lim=np.inf, save_dir="./
             handle.write("\n")
         
         uni_lens = get_lens(unis, level=level, upper_lim=upper_lim)
-        m, med, s = np.mean(uni_lens), np.var(uni_lens)**.5
+        m, med, s = np.mean(uni_lens), np.median(uni_lens), np.var(uni_lens)**.5
         handle.write("UNIF \t")
         handle.write(str(round(m, 3)) + "\t" + 
                      str(round(med, 3)) + "\t" + str(round(s, 3)))
