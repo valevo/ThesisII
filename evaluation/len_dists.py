@@ -49,25 +49,28 @@ def get_mean_std(sample_dict, level="word", upper_lim=np.inf):
     lens_dict = {param: get_lens(sample_ls, level=level, upper_lim=upper_lim)
             for param, sample_ls in sample_dict.items()}
     
-    return {param: (np.mean(lens), np.var(lens)**.5)
+    return {param: (np.mean(lens), np.median(lens), np.var(lens)**.5)
             for param, lens in lens_dict.items()}
 
 
 def mean_std_table(tfs, srfs, unis, level="word", upper_lim=np.inf, save_dir="./"):
     with open(save_dir + level + "_len_means.txt", "w") as handle:
-        for param, (m, s) in get_mean_std(tfs).items():
+        for param, (m, med, s) in get_mean_std(tfs).items():
             handle.write("TF " + str(param) + "\t")
-            handle.write(str(round(m, 3)) + "\t" + str(round(s, 3)))
+            handle.write(str(round(m, 3)) + "\t" + 
+                         str(round(med, 3)) + "\t" + str(round(s, 3)))
             handle.write("\n")
         for param, (m, s) in get_mean_std(srfs).items():
             handle.write("SRF " + str(param) + "\t")
-            handle.write(str(round(m, 3)) + "\t" + str(round(s, 3)))
+            handle.write(str(round(m, 3)) + "\t" + 
+                         str(round(med, 3)) + "\t" + str(round(s, 3)))
             handle.write("\n")
         
         uni_lens = get_lens(unis, level=level, upper_lim=upper_lim)
-        m, s = np.mean(uni_lens), np.var(uni_lens)**.5
+        m, med, s = np.mean(uni_lens), np.var(uni_lens)**.5
         handle.write("UNIF \t")
-        handle.write(str(round(m, 3)) + "\t" + str(round(s, 3)))
+        handle.write(str(round(m, 3)) + "\t" + 
+                     str(round(med, 3)) + "\t" + str(round(s, 3)))
         
     
     
@@ -98,7 +101,7 @@ def get_filters(filter_dir, k, names, param_name, param_ls):
 
 def len_dists_main(tfs, srfs, unis, results_d):
     word_lim = 25
-    sent_lim = 50
+    sent_lim = 35
     
     factors = sorted(tfs.keys())
     hist_lens = sorted(srfs.keys())

@@ -21,6 +21,7 @@ def lex_div_dist_plots(tfs, srfs, unis, div_f, save_dir):
         
     sns.distplot(unis, label="UNIF", axlabel=div_f.__name__, hist_kws=hist_args)
     
+    plt.legend()
     plt.savefig(save_dir + div_f.__name__ + "_dist_plot.png", dpi=300)
     plt.close()
     
@@ -88,6 +89,6 @@ def lex_div_main(tfs, srfs, unis, results_d):
         print("done with ", div_f.__name__, " for UNI", flush=True)
         
         lex_div_dist_plots(tf_mtlds, srf_mtlds, uni_mtlds, div_f, save_dir=results_d)
-        lex_div_means(tf_mtlds, srf_mtlds, uni_mtlds, save_dir=results_d)
+        lex_div_means(tf_mtlds, srf_mtlds, uni_mtlds, div_f, save_dir=results_d)
     
     

@@ -62,7 +62,7 @@ def within_filter_plots(sample_dict, show=True, mle_dict=None):
             mandelbrot = mle_dict[param]
             plot_preds(mandelbrot, np.asarray(xs), color=colour_palette[i])
 
-        plot_lims = get_greater_lims(plot_lims, cur_plot_lims, color=colour_palette[i])
+        plot_lims = get_greater_lims(plot_lims, cur_plot_lims)
         print(plot_lims)
     
     
@@ -278,7 +278,7 @@ if __name__ == "__main__":
     
     
     # MLEs
-    tf_mles, srf_mles, uni_mle = do_mles(tfs, srfs, unis)
+    tf_mles, srf_mles, uni_mandel = do_mles(tfs, srfs, unis)
     
     with open(results_d + "mle_mandelbrot.txt", "w") as handle:
         for param, mandel in tf_mles.items():
@@ -293,7 +293,7 @@ if __name__ == "__main__":
             handle.write("\n\n")
 
         handle.write("\nUNI\n")
-        handle.write(mandel.print_result(string=True))
+        handle.write(uni_mandel.print_result(string=True))
         handle.write("\n\n")
 
     print("MLEs done")
