@@ -60,7 +60,7 @@ def mean_std_table(tfs, srfs, unis, level="word", upper_lim=np.inf, save_dir="./
             handle.write(str(round(m, 3)) + "\t" + 
                          str(round(med, 3)) + "\t" + str(round(s, 3)))
             handle.write("\n")
-        for param, (m, s) in get_mean_std(srfs).items():
+        for param, (m, med, s) in get_mean_std(srfs).items():
             handle.write("SRF " + str(param) + "\t")
             handle.write(str(round(m, 3)) + "\t" + 
                          str(round(med, 3)) + "\t" + str(round(s, 3)))
