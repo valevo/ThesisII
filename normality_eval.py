@@ -48,16 +48,16 @@ if __name__ == "__main__":
     # LEN DISTS
     len_dists_main(tfs, srfs, unis, results_d)
     
-    print("len dists done")
+    print("len dists done", flush=True)
     
     # HEAP
     rng = list(range(0, k, k//100))
     heap_main(tfs, srfs, unis, rng, results_d)
     
-    print("heap_main done")
+    print("heap_main done", flush=True)
     
     # LEX DIV
     lex_div_main(tfs, srfs, unis, results_d)
     
-    print("lex div done")
+    print("lex div done", flush=True)
     

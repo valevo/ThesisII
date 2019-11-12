@@ -74,14 +74,18 @@ def lex_div_main(tfs, srfs, unis, results_d):
     half_srfs = {k: srfs[k] for k in half_hist_lens}
     
     
+    cutoff = int(1e5)
     for div_f in [lex_div.mtld, lex_div.hdd]:
-        print("\nlex div with " + div_f.__name__)
+        print("\nlex div with " + div_f.__name__, flush=True)
     
-        tf_mtlds = {param: [div_f(list(s.tokens())) for s in samples]
+        tf_mtlds = {param: [div_f(list(s.tokens())[:cutoff]) for s in samples]
                     for param, samples in half_tfs.items()}
-        srf_mtlds = {param: [div_f(list(s.tokens())) for s in samples]
+        print("done with ", div_f.__name__, " for TF", flush=True)
+        srf_mtlds = {param: [div_f(list(s.tokens())[:cutoff]) for s in samples]
                     for param, samples in half_srfs.items()}
-        uni_mtlds = [div_f(list(s.tokens())) for s in unis]
+        print("done with ", div_f.__name__, " for SRF", flush=True)
+        uni_mtlds = [div_f(list(s.tokens())[:cutoff]) for s in unis]
+        print("done with ", div_f.__name__, " for UNI", flush=True)
         
         lex_div_dist_plots(tf_mtlds, srf_mtlds, uni_mtlds, div_f, save_dir=results_d)
         lex_div_means(tf_mtlds, srf_mtlds, uni_mtlds, save_dir=results_d)
