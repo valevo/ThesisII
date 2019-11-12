@@ -27,11 +27,10 @@ echo "language: $lang"
 cp -r $HOME/ThesisII/data/"$lang"_pkl "$TMPDIR"/ThesisII/data/
 
 
-
-python3 normality_eval.py --lang=$lang --factors 2 6 10 14 18 22 --hist_lens 2 4 8 16 32 64 81 
+python3 typicality_eval.py --lang=$lang --factors 2 6 10 14 18 22 --hist_lens 2 4 8 16 32 64 81
 
 echo
-echo "done with normality evaluation at `date`"
+echo "done with typicality evaluation at `date`"
 
 cp -r $TMPDIR/ThesisII/results/$lang/evaluation $HOME/ThesisII/results/$lang/
 
@@ -39,10 +38,10 @@ echo "and copied"
 echo
 
 
-python3 typicality_eval.py --lang=$lang --factors 2 6 10 14 18 22 --hist_lens 2 4 8 16 32 64 81
+python3 normality_eval.py --lang=$lang --factors 2 6 10 14 18 22 --hist_lens 2 4 8 16 32 64 81 
 
 echo
-echo "done with typicality evaluation at `date`"
+echo "done with normality evaluation at `date`"
 
 cp -r $TMPDIR/ThesisII/results/$lang/evaluation $HOME/ThesisII/results/$lang/
 
