@@ -26,6 +26,21 @@ def number_sents(sents):
     label_func = lambda s: d[tuple(s)] #if tuple(s) in d else -100
     return d, label_func
 
+def number_sents_remove_empty(sents):
+    d = dict()
+    i = 0
+    found = 0
+    for s in sents:
+        tup_s = tuple(w for w in s if w)
+        if tup_s not in d:
+            d[tup_s] = i
+            i += 1
+        else:
+            found += 1
+    
+    print("duplicates: ", found)
+    label_func = lambda s: d[tuple(s)] #if tuple(s) in d else -100
+    return d, label_func
 
 def number_words(words):
     unique_words = set(words)

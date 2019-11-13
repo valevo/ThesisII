@@ -3,7 +3,8 @@
 from data.reader import wiki_from_pickles, corpora_from_pickles
 from data.corpus import Sentences
 
-from evaluation.jaccard import number_words, number_sents, jaccard 
+from evaluation.jaccard import number_words, number_sents, number_sents_remove_empty,\
+                                jaccard 
 
 from itertools import combinations
 
@@ -71,7 +72,7 @@ if __name__ == "__main__":
     results_d = d + "evaluation/"
 
     wiki = list(wiki_from_pickles("data/" + lang + "_pkl"))
-    sent_d, label_f = number_sents((s for a in wiki for s in a))
+    sent_d, label_f = number_sents_remove_empty((s for a in wiki for s in a))
     word_d, word_label_f = number_words((w for a in wiki for s in a for w in s))
 
 
