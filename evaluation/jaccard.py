@@ -39,7 +39,8 @@ def number_sents_remove_empty(sents):
             found += 1
     
     print("duplicates: ", found)
-    label_func = lambda s: d[tuple(w for w in s if w)] #if tuple(s) in d else -100
+    label_func = lambda s: (d[tuple(w for w in s if w)] 
+                            if tuple(w for w in s if w) in d else -1)
     return d, label_func
 
 def number_words(words):
