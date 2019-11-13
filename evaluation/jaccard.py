@@ -51,15 +51,17 @@ def number_words(words):
 
 def jaccard(ls1, ls2, universe=None):    
     cs1, cs2 = Counter(ls1), Counter(ls2)
-                        
+    
+    print("not found count ls1 = ", cs1[-1])
+    print("not found count ls2 = ", cs2[-1])
+    
     if not universe:
         universe = cs1.keys() | cs2.keys()
         
     c_vec1, c_vec2 = [cs1[x] for x in sorted(universe)],\
                     [cs2[x] for x in sorted(universe)]
-    return sum(min(one, two) 
-               for one, two in zip(c_vec1, c_vec2))/sum(max(one, two) 
-               for one, two in zip(c_vec1, c_vec2))
+    return (sum(min(one, two) for one, two in zip(c_vec1, c_vec2))/
+            sum(max(one, two) for one, two in zip(c_vec1, c_vec2)))
 
 
 
