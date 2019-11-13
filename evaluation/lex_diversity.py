@@ -31,10 +31,12 @@ def lex_div_means(tfs, srfs, unis, div_f, save_dir):
             handle.write("TF " + str(param) + "\t")
             handle.write(str(np.mean(lex_div_ls).round(3)))
             handle.write("\t" + str(np.sqrt(np.var(lex_div_ls)).round(3)))
+            handle.write("\n")
         for param, lex_div_ls in srfs.items():
             handle.write("SRF " + str(param) + "\t")
             handle.write(str(np.mean(lex_div_ls).round(3)))
             handle.write("\t" + str(np.sqrt(np.var(lex_div_ls)).round(3)))
+            handle.write("\n")
             
         handle.write("UNIF " + "\t")
         handle.write(str(np.mean(unis).round(3)))
