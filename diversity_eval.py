@@ -52,18 +52,18 @@ def within_jaccard_table(tfs, srfs, unis, file_name):
         for param, jaccard_vals in tfs.items():
             m, s = np.mean(jaccard_vals), np.var(jaccard_vals)**.5
             handle.write("TF " + str(param) + "\t")
-            handle.write(str(m.round(3)) + "\t" + str(s).round(3))
+            handle.write(str(m.round(3)) + "\t" + str(s.round(3)))
             handle.write("\n") 
             
         for param, jaccard_vals in srfs.items():
             m, s = np.mean(jaccard_vals), np.var(jaccard_vals)**.5
             handle.write("SRF " + str(param) + "\t")
-            handle.write(str(m.round(3)) + "\t" + str(s).round(3))
+            handle.write(str(m.round(3)) + "\t" + str(s.round(3)))
             handle.write("\n") 
             
         m, s = np.mean(jaccard_vals), np.var(jaccard_vals)**.5
         handle.write("UNIF \t")
-        handle.write(str(m.round(3)) + "\t" + str(s).round(3))
+        handle.write(str(m.round(3)) + "\t" + str(s.round(3)))
         handle.write("\n")
     
 
