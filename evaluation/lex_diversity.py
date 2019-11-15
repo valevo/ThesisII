@@ -7,10 +7,40 @@ from data.corpus import Sentences
 from lexical_diversity import lex_div
 
 import numpy as np
+from collections import Counter
 import matplotlib.pyplot as plt
 import seaborn as sns
     
+
+def my_hdd(text):
+    def choose(n, k):
+        if 0 <= k <= n:
+            ntok = 1
+            ktok = 1
+            for t in range(1, min(k, n - k) + 1):
+                ntok *= n
+                ktok *= t
+                n -= 1
+            return ntok // ktok
+        else:
+            return 0
+
+    def hyper(successes, sample_size, population_size, freq):
+        try:
+            prob_1 = 1.0 - ((choose(freq, successes) * 
+                             choose((population_size - freq),(sample_size - successes)))/
+                            choose(population_size, sample_size))
+            prob_1 = prob_1 * (1/sample_size)
+        except ZeroDivisionError:
+            prob_1 = 0
+			
+        return prob_1
+
+    frequency_dict = Counter(text)
+    n_toks = len(text)
+    return sum(hyper(0, 1000, n_toks, f) for f in frequency_dict.values())
     
+
 def lex_div_dist_plots(tfs, srfs, unis, div_f, save_dir):
     hist_args = dict(alpha=1.0)
     for param, div_vals in tfs.items():
@@ -78,7 +108,7 @@ def lex_div_main(tfs, srfs, unis, results_d):
     
     
     cutoff = int(1e5)
-    for div_f in [lex_div.mtld, lex_div.hdd]:
+    for div_f in [lex_div.mtld, my_hdd]:
         print("\nlex div with " + div_f.__name__, flush=True)
     
         tf_mtlds = {param: [div_f(list(s.tokens())[:cutoff]) for s in samples]

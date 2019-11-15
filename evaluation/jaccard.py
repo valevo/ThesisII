@@ -52,9 +52,6 @@ def number_words(words):
 def jaccard(ls1, ls2, universe=None):    
     cs1, cs2 = Counter(ls1), Counter(ls2)
     
-    print("not found count ls1 = ", cs1[-1])
-    print("not found count ls2 = ", cs2[-1])
-    
     if not universe:
         universe = cs1.keys() | cs2.keys()
         
