@@ -110,10 +110,10 @@ if __name__ == "__main__":
                                                                   cond=cond)
     
     within_jaccard_plots(tf_jaccards, srf_jaccards, uni_jaccards,
-                         save_dir=results_d + "jaccard_within")
+                         file_name=results_d + "jaccard_within")
     
     within_jaccard_table(tf_jaccards, srf_jaccards, uni_jaccards,
-                         save_dir=results_d + "jaccard_within")
+                         file_name=results_d + "jaccard_within")
     
     
     
@@ -127,10 +127,10 @@ if __name__ == "__main__":
                                                                   cond=cond)
     
     within_jaccard_plots(tf_jcc_word, srf_jcc_word, uni_jcc_word,
-                         save_dir=results_d + "jaccard_within_tokens")
+                         file_name=results_d + "jaccard_within_tokens")
     
     within_jaccard_table(tf_jcc_word, srf_jcc_word, uni_jcc_word,
-                         save_dir=results_d + "jaccard_within_tokens")
+                         file_name=results_d + "jaccard_within_tokens")
     
     
     
