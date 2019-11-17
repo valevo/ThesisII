@@ -61,7 +61,7 @@ def within_jaccard_table(tfs, srfs, unis, file_name):
             handle.write(str(m.round(3)) + "\t" + str(s.round(3)))
             handle.write("\n") 
             
-        m, s = np.mean(jaccard_vals), np.var(jaccard_vals)**.5
+        m, s = np.mean(unis), np.var(unis)**.5
         handle.write("UNIF \t")
         handle.write(str(m.round(3)) + "\t" + str(s.round(3)))
         handle.write("\n")
