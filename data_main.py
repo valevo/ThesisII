@@ -112,7 +112,7 @@ if __name__ == "__main__":
     hexbin_plot(xs, ys, xlbl="$\log$ $r(w)$", ylbl="$\log$ $f(w)$", min_y=1)
     
     mandelbrot = Mandelbrot(ys, xs)
-    mandelbrot_fit = mandelbrot.fit(start_params=np.asarray([1.0, 1.0]), 
+    mandelbrot_fit = mandelbrot.fit(start_params=np.asarray([10.0, 1000.0]), # [1.0, 1.0]
                                     method="powell", full_output=True)    
     mandelbrot.register_fit(mandelbrot_fit)
     mandelbrot.print_result()
