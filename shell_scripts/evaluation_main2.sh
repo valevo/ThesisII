@@ -57,6 +57,8 @@ for i in $(seq 0 6); do
     
     cp -vr $TMPDIR/ThesisII/results/$l/evaluation $HOME/ThesisII/results/$l/
     echo "Copied $l"
+    echo
+    echo
     
 done 
 
