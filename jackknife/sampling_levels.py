@@ -49,7 +49,7 @@ def sampling_levels_main(wiki, n, m, save_dir="./"):
     art_xs, art_ys = list(zip(*sorted(art_joint.values())))
     
     hexbin_plot(art_xs, art_ys, xlbl=r"$\log$ $r(w)$", ylbl=r"$\log$ $f(w)$",
-                label="articles", min_y=1)
+                label="texts", min_y=1)
     
     do_mle(art_xs, art_ys, Articles, save_dir)
     
