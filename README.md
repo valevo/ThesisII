@@ -21,17 +21,17 @@
  
 ## Chapter 2
 
- - [ ] editing -> comments, readability
+ - [x] editing -> comments, readability
  - [x] Tables -> change sizes, making smaller (use resizebox and footnotesize)
  - [ ] Figures -> change sizes, making larger (use wrap figure to have text float around); add names (languages) to the subplots
  - [x] for goodness-of-fit measures: add extreme values
- - [ ] references
+ - [x] references
  - [ ] add overall summary/conclusions for Chapter, 
- - [ ] mention data availability on Github: valevo/Thesis -> folder names correspond to chapter and figure numbers, file names to language name (e.g. valevo/Thesis/Chapter 2/Figure 2.1/FI.png)
+ - [x] mention data availability on Github: valevo/Thesis -> folder names correspond to chapter and figure numbers, file names to language name (e.g. valevo/Thesis/Chapter 2/Figure 2.1/FI.png)
  - [ ] (make plots of MLEs and null models)
  - [ ] (share cbars and y-axes in plots)
  - [ ] note that the plots in this chapter are proper estimates 
- - [ ] hapax growth
+ - [ ] (hapax growth)
  
  
 ## Chapter 3
@@ -45,14 +45,15 @@
  - [ ] add to conclusion of Section 3.4 that convergence is useful for Chapter 4
  - [ ] conclusion for Chapter 3
  - [ ] elaborate on introducing paragraph of Chapter 3
+ - [ ] Fano factor plot: fix y-axis
  
  
 ## Chapter 4
 
  - [ ] editing -> comments
  - [ ] (re-do transitioning paragraphs from typicality to filter implementations)
- - [ ] conclusion of Filtering: what does it achieve (aka the gist) and what are the limitations? how does it generalise? 
- - [ ] conclusion for filtering: how can learnability of Zipf be assessed?
+ - [ ] conclusion of Filtering (algorithms & theory): what does it achieve (aka the gist) and what are the limitations? how does it generalise? 
+ - [ ] conclusion for Filtering (chapter as a whole): how can learnability of Zipf be assessed?
 
 ## Chapter 5
  - [ ] first a list of contributions, then future work
